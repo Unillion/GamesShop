@@ -51,9 +51,7 @@ namespace GamesShop
             string confPassword = ConfirmPasswordBox.Password;
 
             if (password != confPassword)
-            {
                 PasswordError.Visibility = Visibility.Visible;
-            }
             else PasswordError.Visibility = Visibility.Hidden;
         }
     }
