@@ -1,19 +1,11 @@
-﻿using System.Text;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GamesShop
 {
     public partial class RegisterMenu : Window
     {
-
         bool canRegister = true;
 
         public RegisterMenu()
@@ -23,25 +15,43 @@ namespace GamesShop
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!canRegister) return;
-            UserManager.RegisterUser(UsernameTextBox.Text, EmailTextBox.Text, ConfirmPasswordBox.Password);
+            if (!ValidateInputs())
+            {
+                canRegister = false;
+                return;
+            }
 
-            UsernameTextBox.Text = string.Empty;
-            EmailTextBox.Text = string.Empty;
-            PasswordBox.Password = string.Empty;
+            canRegister = true;
 
-            MessageBox.Show("Регистрация прошла успешно. Войдите в систему");
-            LoginMenu loginMenu = new LoginMenu();
-            loginMenu.Show();
+            User newUser = new User(UsernameTextBox.Text.Trim(),
+                                    EmailTextBox.Text.Trim(),
+                                    PasswordBox.Password);
 
-            this.Close();
+            bool success = DatabaseManager.AddUser(newUser);
+
+            if (success)
+            {
+                UsernameTextBox.Text = string.Empty;
+                EmailTextBox.Text = string.Empty;
+                PasswordBox.Password = string.Empty;
+                ConfirmPasswordBox.Password = string.Empty;
+
+                MessageBox.Show("Регистрация прошла успешно. Войдите в систему");
+                LoginMenu loginMenu = new LoginMenu();
+                loginMenu.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Ошибка при регистрации. Попробуйте снова.");
+            }
         }
+
 
         private void GoToLogin_Click(object sender, RoutedEventArgs e)
         {
             LoginMenu loginWindow = new LoginMenu();
             loginWindow.Show();
-
             this.Close();
         }
 
@@ -50,9 +60,35 @@ namespace GamesShop
             string password = PasswordBox.Password;
             string confPassword = ConfirmPasswordBox.Password;
 
-            if (password != confPassword)
+            PasswordError.Visibility = password != confPassword
+                ? Visibility.Visible
+                : Visibility.Hidden;
+        }
+
+        private bool ValidateInputs()
+        {
+            string username = UsernameTextBox.Text.Trim();
+            string email = EmailTextBox.Text.Trim();
+            string password = PasswordBox.Password;
+            string confirmPassword = ConfirmPasswordBox.Password;
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) ||
+                string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
+                return false;
+
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                return false;
+            }
+            
+
+            if (password != confirmPassword)
+            {
                 PasswordError.Visibility = Visibility.Visible;
-            else PasswordError.Visibility = Visibility.Hidden;
+                return false;
+            }else PasswordError.Visibility = Visibility.Hidden;
+
+            return true;
         }
     }
 }

@@ -24,8 +24,30 @@ namespace GamesShop
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            string username = UsernameTextBox.Text.Trim();
+            string password = PasswordBox.Password;
 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Введите имя пользователя и пароль.");
+                return;
+            }
+
+            bool isValid = DatabaseManager.ValidateUserByUsername(username, password);
+
+            if (isValid)
+            {
+                MessageBox.Show("Вход выполнен успешно!");
+                Main mainWindow = new Main(username);
+                mainWindow.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Неправильное имя пользователя или пароль.");
+            }
         }
+
 
         private void GoToRegister_Click(object sender, RoutedEventArgs e)
         {

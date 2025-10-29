@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:GamesShop"
              StartupUri="RegisterMenu.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>
