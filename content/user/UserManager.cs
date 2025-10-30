@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamesShop
+namespace GamesShop.content.user
 {
     public partial class UserManager
     {

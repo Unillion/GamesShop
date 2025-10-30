@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using GamesShop.content.db;
+using GamesShop.content.user;
 
 namespace GamesShop
 {
@@ -27,7 +29,7 @@ namespace GamesShop
                                     EmailTextBox.Text.Trim(),
                                     PasswordBox.Password);
 
-            bool success = DatabaseManager.AddUser(newUser);
+            bool success = UserDatabaseManager.AddUser(newUser);
 
             if (success)
             {

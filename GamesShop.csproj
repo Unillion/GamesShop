@@ -9,11 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\profile.png" />
+    <None Remove="content\Images\game_logo.png" />
+    <None Remove="content\Images\profile.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\profile.png">
+    <Content Include="content\Images\profile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -24,6 +25,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="content\Images\game_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

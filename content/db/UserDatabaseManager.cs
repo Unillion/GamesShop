@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using GamesShop.content.user;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamesShop
+namespace GamesShop.content.db
 {
-    public class DatabaseManager
+    public class UserDatabaseManager
     {
         private static string connectionString =
                 @"Server=MISHA1\SQLEXPRESS01;Database=gameshopdb;Trusted_Connection=True;TrustServerCertificate=True;";
@@ -60,9 +61,9 @@ namespace GamesShop
                     {
                         cmd.Parameters.AddWithValue("@Username", username);
 
-                        var result = cmd.ExecuteScalar(); // Получаем хеш пароля из базы
+                        var result = cmd.ExecuteScalar();
                         if (result == null)
-                            return false; // Пользователь не найден
+                            return false;
 
                         string storedHash = result.ToString();
                         string enteredHash = HashPassword(password);

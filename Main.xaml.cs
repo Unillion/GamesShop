@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using GamesShop.content.db;
+using GamesShop.content.game;
+using GamesShop.content.GUI.MainWindowSections;
+using GamesShop.content.GUI.MainWindowSections.impl;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -9,69 +13,51 @@ namespace GamesShop
     public partial class Main : Window
     {
         private string currentUsername;
+        private SectionManager sectionManager;
+
         public Main(string username)
         {
             InitializeComponent();
-
-            // По умолчанию показываем раздел "Игры"
-            ShowGamesSection();
-
             currentUsername = username;
+            InitializeNavigation();
             LoadUserBalance();
+        }
+
+        private void InitializeNavigation()
+        {
+            sectionManager = new SectionManager(MainContent);
+
+            sectionManager.RegisterSection("Games", new GameListSection(currentUsername));
+            sectionManager.RegisterSection("Library", new LibrarySection());
+
+            sectionManager.RegisterNavigationButton(GamesButton);
+            sectionManager.RegisterNavigationButton(AboutButton);
+
+            sectionManager.NavigateTo("Games", GamesButton);
         }
 
         private void LoadUserBalance()
         {
-            decimal balance = DatabaseManager.GetUserBalance(currentUsername, "USD");
-            UserBalanceText.Text = balance.ToString("F2"); // Формат с двумя знаками после запятой
-        }
-        private void SetActive(Button activeButton)
-        {
-            // Сброс активного состояния
-            GamesButton.Tag = null;
-            AboutButton.Tag = null;
-
-            // Установка активной кнопки
-            activeButton.Tag = "Active";
-        }
-
-        private void ShowGamesSection()
-        {
-            SetActive(GamesButton);
-            MainContent.Content = new TextBlock
-            {
-                Text = "Раздел: Игры",
-                Foreground = Brushes.White,
-                FontSize = 20,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-        }
-
-        private void ShowAboutSection()
-        {
-            SetActive(AboutButton);
-            MainContent.Content = new TextBlock
-            {
-                Text = "Раздел: О нас",
-                Foreground = Brushes.White,
-                FontSize = 20,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
+            decimal balance = UserDatabaseManager.GetUserBalance(currentUsername, "USD");
+            UserBalanceText.Text = balance.ToString("F2");
         }
 
         private void GamesButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowGamesSection();
+            sectionManager.NavigateTo("Games", (Button)sender);
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowAboutSection();
+            sectionManager.NavigateTo("Library", (Button)sender);
         }
 
         private void ProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowProfileContextMenu();
+        }
+
+        private void ShowProfileContextMenu()
         {
             ContextMenu menu = new ContextMenu
             {
@@ -95,7 +81,7 @@ namespace GamesShop
             };
             profileItem.Click += (s, args) =>
             {
-                DatabaseManager.UpdateUserBalance(currentUsername, "RU", 100);
+                UserDatabaseManager.UpdateUserBalance(currentUsername, "RU", 100);
             };
 
             MenuItem logoutItem = new MenuItem
@@ -110,12 +96,11 @@ namespace GamesShop
             };
             logoutItem.Click += (s, args) =>
             {
+                // Логика выхода
             };
 
-            // Добавляем пункты
             menu.Items.Add(profileItem);
             menu.Items.Add(logoutItem);
-
             menu.IsOpen = true;
         }
     }

@@ -4,11 +4,9 @@
         Title="Магазин"
         Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
         Background="#1E1E1E">
 
     <Window.Resources>
-
         <Style TargetType="Button" x:Key="MenuButton">
             <Setter Property="Height" Value="50"/>
             <Setter Property="Margin" Value="10,0"/>
@@ -32,11 +30,6 @@
                         </Grid>
 
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ActiveLine" Property="Opacity" Value="0.3"/>
-                                <Setter Property="Foreground" Value="#108BEF"/>
-                            </Trigger>
-
                             <Trigger Property="Tag" Value="Active">
                                 <Setter Property="Foreground" Value="#108BEF"/>
                                 <Setter TargetName="ActiveLine" Property="Opacity" Value="1"/>
@@ -93,7 +86,7 @@
                 Click="GamesButton_Click"
                 Tag="Active"/>
                 <Button x:Name="AboutButton"
-                Content="О нас"
+                Content="Бибилиотека Игр"
                 Style="{StaticResource MenuButton}"
                 Click="AboutButton_Click"/>
             </StackPanel>

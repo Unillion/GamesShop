@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GamesShop.content.db;
 
 namespace GamesShop
 {
@@ -33,7 +34,7 @@ namespace GamesShop
                 return;
             }
 
-            bool isValid = DatabaseManager.ValidateUserByUsername(username, password);
+            bool isValid = UserDatabaseManager.ValidateUserByUsername(username, password);
 
             if (isValid)
             {
