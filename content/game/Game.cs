@@ -33,7 +33,7 @@ namespace GamesShop.content.game
 
         public string GetFormattedPrice()
         {
-            return Price.ToString("F2") + " $";
+            return Price.ToString() + " $";
         }
 
         public string GetFormattedReleaseDate()

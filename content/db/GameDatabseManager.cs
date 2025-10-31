@@ -2,9 +2,6 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamesShop.content.db
 {
@@ -14,135 +11,79 @@ namespace GamesShop.content.db
 
         public static List<Game> GetAllGames()
         {
-            var games = new List<Game>();
-
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games";
-
-                using (var command = new SqlCommand(query, connection))
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        games.Add(new Game
-                        {
-                            ID = reader.GetInt32(0),
-                            Title = reader.GetString(1),
-                            Description = reader.GetString(2),
-                            Genre = reader.GetString(3),
-                            Price = reader.GetDecimal(4),
-                            ReleaseDate = reader.GetDateTime(5),
-                            Rating = reader.GetInt32(6),
-                            Logo = reader.GetString(7)
-                        });
-                    }
-                }
-            }
-
-            return games;
+            return ExecuteQuery("SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games");
         }
 
         public static Game GetGameById(int id)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE ID = @ID";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", id);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new Game
-                            {
-                                ID = reader.GetInt32(0),
-                                Title = reader.GetString(1),
-                                Description = reader.GetString(2),
-                                Genre = reader.GetString(3),
-                                Price = reader.GetDecimal(4),
-                                ReleaseDate = reader.GetDateTime(5),
-                                Rating = reader.GetInt32(6),
-                                Logo = reader.GetString(7)
-                            };
-                        }
-                    }
-                }
-            }
-
-            return null;
+            var games = ExecuteQuery(
+                "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE ID = @ID",
+                new SqlParameter("@ID", id)
+            );
+            return games.Count > 0 ? games[0] : null;
         }
 
         public static List<Game> GetGamesByGenre(string genre)
         {
-            var games = new List<Game>();
-
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE Genre = @Genre";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Genre", genre);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            games.Add(new Game
-                            {
-                                ID = reader.GetInt32(0),
-                                Title = reader.GetString(1),
-                                Description = reader.GetString(2),
-                                Genre = reader.GetString(3),
-                                Price = reader.GetDecimal(4),
-                                ReleaseDate = reader.GetDateTime(5),
-                                Rating = reader.GetInt32(6),
-                                Logo = reader.GetString(7)
-                            });
-                        }
-                    }
-                }
-            }
-
-            return games;
+            return ExecuteQuery(
+                "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE Genre = @Genre",
+                new SqlParameter("@Genre", genre)
+            );
         }
 
         public static List<Game> SearchGames(string searchTerm)
         {
+            return ExecuteQuery(
+                "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE Title LIKE @SearchTerm OR Description LIKE @SearchTerm",
+                new SqlParameter("@SearchTerm", $"%{searchTerm}%")
+            );
+        }
+
+        public static bool AddGame(Game game)
+        {
+            return ExecuteNonQuery(
+                @"INSERT INTO Games (Title, Description, Genre, Price, ReleaseDate, Rating, Logo) 
+                VALUES (@Title, @Description, @Genre, @Price, @ReleaseDate, @Rating, @Logo)",
+                CreateGameParameters(game)
+            );
+        }
+
+        public static bool UpdateGame(Game game)
+        {
+            return ExecuteNonQuery(
+                @"UPDATE Games SET 
+                Title = @Title, Description = @Description, Genre = @Genre, 
+                Price = @Price, ReleaseDate = @ReleaseDate, Rating = @Rating, Logo = @Logo 
+                WHERE ID = @ID",
+                CreateGameParameters(game, true)
+            );
+        }
+
+        public static bool DeleteGame(int id)
+        {
+            return ExecuteNonQuery(
+                "DELETE FROM Games WHERE ID = @ID",
+                new SqlParameter("@ID", id)
+            );
+        }
+
+        // Вспомогательные методы
+
+        private static List<Game> ExecuteQuery(string query, params SqlParameter[] parameters)
+        {
             var games = new List<Game>();
 
             using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(query, connection))
             {
+                command.Parameters.AddRange(parameters);
                 connection.Open();
-                string query = "SELECT ID, Title, Description, Genre, Price, ReleaseDate, Rating, Logo FROM Games WHERE Title LIKE @SearchTerm OR Description LIKE @SearchTerm";
 
-                using (var command = new SqlCommand(query, connection))
+                using (var reader = command.ExecuteReader())
                 {
-                    command.Parameters.AddWithValue("@SearchTerm", $"%{searchTerm}%");
-
-                    using (var reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            games.Add(new Game
-                            {
-                                ID = reader.GetInt32(0),
-                                Title = reader.GetString(1),
-                                Description = reader.GetString(2),
-                                Genre = reader.GetString(3),
-                                Price = reader.GetDecimal(4),
-                                ReleaseDate = reader.GetDateTime(5),
-                                Rating = reader.GetInt32(6),
-                                Logo = reader.GetString(7)
-                            });
-                        }
+                        games.Add(CreateGameFromReader(reader));
                     }
                 }
             }
@@ -150,73 +91,51 @@ namespace GamesShop.content.db
             return games;
         }
 
-        public static bool AddGame(Game game)
+        private static bool ExecuteNonQuery(string query, params SqlParameter[] parameters)
         {
             using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(query, connection))
             {
+                command.Parameters.AddRange(parameters);
                 connection.Open();
-                string query = @"INSERT INTO Games (Title, Description, Genre, Price, ReleaseDate, Rating, Logo) 
-                               VALUES (@Title, @Description, @Genre, @Price, @ReleaseDate, @Rating, @Logo)";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Title", game.Title);
-                    command.Parameters.AddWithValue("@Description", game.Description);
-                    command.Parameters.AddWithValue("@Genre", game.Genre);
-                    command.Parameters.AddWithValue("@Price", game.Price);
-                    command.Parameters.AddWithValue("@ReleaseDate", game.ReleaseDate);
-                    command.Parameters.AddWithValue("@Rating", game.Rating);
-                    command.Parameters.AddWithValue("@Logo", game.Logo ?? (object)DBNull.Value);
-
-                    return command.ExecuteNonQuery() > 0;
-                }
+                return command.ExecuteNonQuery() > 0;
             }
         }
 
-        public static bool UpdateGame(Game game)
+        private static Game CreateGameFromReader(SqlDataReader reader)
         {
-            using (var connection = new SqlConnection(connectionString))
+            return new Game
             {
-                connection.Open();
-                string query = @"UPDATE Games SET 
-                               Title = @Title, 
-                               Description = @Description, 
-                               Genre = @Genre, 
-                               Price = @Price, 
-                               ReleaseDate = @ReleaseDate, 
-                               Rating = @Rating, 
-                               Logo = @Logo 
-                               WHERE ID = @ID";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", game.ID);
-                    command.Parameters.AddWithValue("@Title", game.Title);
-                    command.Parameters.AddWithValue("@Description", game.Description);
-                    command.Parameters.AddWithValue("@Genre", game.Genre);
-                    command.Parameters.AddWithValue("@Price", game.Price);
-                    command.Parameters.AddWithValue("@ReleaseDate", game.ReleaseDate);
-                    command.Parameters.AddWithValue("@Rating", game.Rating);
-                    command.Parameters.AddWithValue("@Logo", game.Logo ?? (object)DBNull.Value);
-
-                    return command.ExecuteNonQuery() > 0;
-                }
-            }
+                ID = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.GetString(2),
+                Genre = reader.GetString(3),
+                Price = reader.GetDecimal(4),
+                ReleaseDate = reader.GetDateTime(5),
+                Rating = reader.GetInt32(6),
+                Logo = reader.GetString(7)
+            };
         }
 
-        public static bool DeleteGame(int id)
+        private static SqlParameter[] CreateGameParameters(Game game, bool includeId = false)
         {
-            using (var connection = new SqlConnection(connectionString))
+            var parameters = new List<SqlParameter>
             {
-                connection.Open();
-                string query = "DELETE FROM Games WHERE ID = @ID";
+                new SqlParameter("@Title", game.Title),
+                new SqlParameter("@Description", game.Description),
+                new SqlParameter("@Genre", game.Genre),
+                new SqlParameter("@Price", game.Price),
+                new SqlParameter("@ReleaseDate", game.ReleaseDate),
+                new SqlParameter("@Rating", game.Rating),
+                new SqlParameter("@Logo", game.Logo ?? (object)DBNull.Value)
+            };
 
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", id);
-                    return command.ExecuteNonQuery() > 0;
-                }
+            if (includeId)
+            {
+                parameters.Add(new SqlParameter("@ID", game.ID));
             }
+
+            return parameters.ToArray();
         }
     }
 }

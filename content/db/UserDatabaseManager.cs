@@ -1,154 +1,117 @@
 ﻿using GamesShop.content.user;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GamesShop.content.db
 {
     public class UserDatabaseManager
     {
         private static string connectionString =
-                @"Server=MISHA1\SQLEXPRESS01;Database=gameshopdb;Trusted_Connection=True;TrustServerCertificate=True;";
-
+            @"Server=MISHA1\SQLEXPRESS01;Database=gameshopdb;Trusted_Connection=True;TrustServerCertificate=True;";
 
         public static bool AddUser(User user)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+            string query = @"
+                INSERT INTO Users (Username, Email, PasswordHash) 
+                VALUES (@Username, @Email, @PasswordHash);
+        
+                INSERT INTO Libraries (UserID) 
+                VALUES (IDENT_CURRENT('Users'));
+                
+                INSERT INTO Carts (UserID) 
+                VALUES (IDENT_CURRENT('Users'));
 
-                    // Хешируем пароль
-                    string passwordHash = HashPassword(user.Password);
+                INSERT INTO bill (UserID)
+                VALUES (IDENT_CURRENT('Users'));";
 
-                    string query = "INSERT INTO Users (Username, Email, PasswordHash) " +
-                                   "VALUES (@Username, @Email, @PasswordHash)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", user.UserName);
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-
-                        int rows = cmd.ExecuteNonQuery();
-                        return rows > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
-                return false;
-            }
+            
+            return ExecuteNonQuery(
+                query,
+                new SqlParameter("@Username", user.UserName),
+                new SqlParameter("@Email", user.Email),
+                new SqlParameter("@PasswordHash", HashPassword(user.Password))
+            );
         }
 
         public static bool ValidateUserByUsername(string username, string password)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+            var storedHash = ExecuteScalar<string>(
+                "SELECT PasswordHash FROM Users WHERE Username = @Username",
+                new SqlParameter("@Username", username)
+            );
 
-                    string query = "SELECT PasswordHash FROM Users WHERE Username = @Username";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", username);
-
-                        var result = cmd.ExecuteScalar();
-                        if (result == null)
-                            return false;
-
-                        string storedHash = result.ToString();
-                        string enteredHash = HashPassword(password);
-
-                        return storedHash == enteredHash;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Ошибка при входе: {ex.Message}");
-                return false;
-            }
+            return storedHash != null && storedHash == HashPassword(password);
         }
 
         public static decimal GetUserBalance(string username, string currencyCode = "USD")
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    string query = @"
-                        SELECT b.Amount
-                        FROM Balances b
-                        JOIN bill bl ON b.BillID = bl.ID
-                        JOIN Users u ON bl.UserID = u.ID
-                        WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@CurrencyCode", currencyCode);
-
-                        var result = cmd.ExecuteScalar();
-                        if (result != null)
-                            return Convert.ToDecimal(result);
-
-                        return 0m;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Ошибка при получении баланса: {ex.Message}");
-                return 0m;
-            }
+            return ExecuteScalar<decimal?>(
+                @"SELECT b.Amount
+                  FROM Balances b
+                  JOIN bill bl ON b.BillID = bl.ID
+                  JOIN Users u ON bl.UserID = u.ID
+                  WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode",
+                new SqlParameter("@Username", username),
+                new SqlParameter("@CurrencyCode", currencyCode)
+            ) ?? 0m;
         }
 
         public static bool UpdateUserBalance(string username, string currencyCode, decimal newAmount)
         {
+            return ExecuteNonQuery(
+                @"UPDATE b
+                  SET b.Amount = @Amount
+                  FROM Balances b
+                  JOIN bill bl ON b.BillID = bl.ID
+                  JOIN Users u ON bl.UserID = u.ID
+                  WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode",
+                new SqlParameter("@Username", username),
+                new SqlParameter("@CurrencyCode", currencyCode),
+                new SqlParameter("@Amount", newAmount)
+            );
+        }
+
+        // Вспомогательные методы
+
+        private static bool ExecuteNonQuery(string query, params SqlParameter[] parameters)
+        {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (var conn = new SqlConnection(connectionString))
+                using (var cmd = new SqlCommand(query, conn))
                 {
+                    cmd.Parameters.AddRange(parameters);
                     conn.Open();
-
-                    string query = @"
-                        UPDATE b
-                        SET b.Amount = @Amount
-                        FROM Balances b
-                        JOIN bill bl ON b.BillID = bl.ID
-                        JOIN Users u ON bl.UserID = u.ID
-                        WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@CurrencyCode", currencyCode);
-                        cmd.Parameters.AddWithValue("@Amount", newAmount);
-
-                        int rows = cmd.ExecuteNonQuery();
-                        return rows > 0;
-                    }
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ошибка при обновлении баланса: {ex.Message}");
+                ShowError($"Ошибка при выполнении запроса: {ex.Message}");
                 return false;
             }
         }
 
-
+        private static T ExecuteScalar<T>(string query, params SqlParameter[] parameters)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(connectionString))
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddRange(parameters);
+                    conn.Open();
+                    var result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value ? (T)Convert.ChangeType(result, typeof(T)) : default(T);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Ошибка при получении данных: {ex.Message}");
+                return default(T);
+            }
+        }
 
         private static string HashPassword(string password)
         {
@@ -158,6 +121,11 @@ namespace GamesShop.content.db
                 byte[] hash = sha.ComputeHash(bytes);
                 return Convert.ToBase64String(hash);
             }
+        }
+
+        private static void ShowError(string message)
+        {
+            System.Windows.MessageBox.Show(message);
         }
     }
 }
