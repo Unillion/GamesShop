@@ -96,9 +96,11 @@ namespace GamesShop.content.GUI.MainWindowSections.impl
             {
                 if (!string.IsNullOrEmpty(game.Logo))
                 {
+                    string fullPath = "content/Images/" + game.Logo;
+
                     var image = new Image
                     {
-                        Source = new BitmapImage(new Uri(game.Logo, UriKind.RelativeOrAbsolute)),
+                        Source = new BitmapImage(new Uri(fullPath, UriKind.RelativeOrAbsolute)),
                         Stretch = Stretch.Uniform,
                         Height = 160
                     };
