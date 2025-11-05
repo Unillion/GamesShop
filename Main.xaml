@@ -40,7 +40,6 @@
             </Setter>
         </Style>
 
-        <!-- Стиль для кнопки профиля -->
         <Style TargetType="Button" x:Key="ProfileButton">
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
@@ -70,7 +69,6 @@
     </Window.Resources>
 
     <DockPanel>
-        <!-- Верхняя панель -->
         <Grid DockPanel.Dock="Top" Background="#2D2D2D" Height="50">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -78,7 +76,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Кнопки меню слева -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0">
                 <Button x:Name="GamesButton"
                 Content="Игры"
@@ -89,6 +86,10 @@
                 Content="Бибилиотека Игр"
                 Style="{StaticResource MenuButton}"
                 Click="AboutButton_Click"/>
+                <Button x:Name="CartButton"
+                Content="Корзина"
+                Style="{StaticResource MenuButton}"
+                Click="Cart_Click"/>
             </StackPanel>
 
             <!-- Баланс пользователя по центру -->

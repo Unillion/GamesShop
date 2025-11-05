@@ -1,4 +1,5 @@
-﻿using GamesShop.content.user;
+﻿using GamesShop.content.game;
+using GamesShop.content.user;
 using Microsoft.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,6 +32,79 @@ namespace GamesShop.content.db
                 new SqlParameter("@Username", user.UserName),
                 new SqlParameter("@Email", user.Email),
                 new SqlParameter("@PasswordHash", HashPassword(user.Password))
+            );
+        }
+
+        public static List<Game> GetUserGames(string username)
+        {
+            string query = @"
+                SELECT g.ID, g.Title, g.Description, g.Genre, g.Price, g.ReleaseDate, g.Rating, g.Logo
+                FROM CartItems ci
+                JOIN Carts c ON ci.CartID = c.ID
+                JOIN Users u ON c.UserID = u.ID
+                JOIN Games g ON ci.GameID = g.ID
+                WHERE u.Username = @Username";
+
+            return GameDatabseManager.ExecuteQuery(
+                query,
+                new SqlParameter("@Username", username)
+            );
+        }
+
+        public static int GetUserCartId(string username)
+        {
+            string query = @"
+                SELECT c.ID 
+                FROM Carts c
+                JOIN Users u ON c.UserID = u.ID
+                WHERE u.Username = @Username";
+
+            return ExecuteScalar<int?>(
+                query,
+                new SqlParameter("@Username", username)
+            ) ?? 0;
+        }
+
+        public static bool AddGameToCart(string username, int gameId)
+        {
+            string query = @"
+                DECLARE @CartID INT;
+        
+
+                SELECT @CartID = c.ID 
+                FROM Carts c 
+                JOIN Users u ON c.UserID = u.ID 
+                WHERE u.Username = @Username;
+        
+
+                IF NOT EXISTS (SELECT 1 FROM CartItems WHERE CartID = @CartID AND GameID = @GameID)
+                BEGIN
+
+                INSERT INTO CartItems (CartID, GameID, Quantity) 
+                VALUES (@CartID, @GameID, @Quantity);
+                END";
+
+            return ExecuteNonQuery(
+                query,
+                new SqlParameter("@Username", username),
+                new SqlParameter("@GameID", gameId),
+                new SqlParameter("@Quantity", 1)
+            );
+        }
+
+        public static bool RemoveGameFromCart(string username, int gameId)
+        {
+            string query = @"
+                DELETE ci
+                FROM CartItems ci
+                JOIN Carts c ON ci.CartID = c.ID
+                JOIN Users u ON c.UserID = u.ID
+                WHERE u.Username = @Username AND ci.GameID = @GameID";
+
+            return ExecuteNonQuery(
+                query,
+                new SqlParameter("@Username", username),
+                new SqlParameter("@GameID", gameId)
             );
         }
 
@@ -72,7 +146,6 @@ namespace GamesShop.content.db
             );
         }
 
-        // Вспомогательные методы
 
         private static bool ExecuteNonQuery(string query, params SqlParameter[] parameters)
         {

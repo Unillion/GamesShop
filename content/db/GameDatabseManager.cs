@@ -69,7 +69,7 @@ namespace GamesShop.content.db
 
         // Вспомогательные методы
 
-        private static List<Game> ExecuteQuery(string query, params SqlParameter[] parameters)
+        public static List<Game> ExecuteQuery(string query, params SqlParameter[] parameters)
         {
             var games = new List<Game>();
 

@@ -214,6 +214,10 @@ namespace GamesShop.content.GUI.MainWindowSections.impl
             {
                 buyButton.Background = new SolidColorBrush(Color.FromRgb(16, 139, 239));
             };
+            buyButton.Click += (s, e) =>
+            {
+                UserDatabaseManager.AddGameToCart(username, game.ID);
+            };
 
             priceButtonStackPanel.Children.Add(priceTextBlock);
             priceButtonStackPanel.Children.Add(buyButton);

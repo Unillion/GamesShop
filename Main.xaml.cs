@@ -29,9 +29,11 @@ namespace GamesShop
 
             sectionManager.RegisterSection("Games", new GameListSection(currentUsername));
             sectionManager.RegisterSection("Library", new LibrarySection());
+            sectionManager.RegisterSection("Cart", new CartSection(currentUsername));
 
             sectionManager.RegisterNavigationButton(GamesButton);
             sectionManager.RegisterNavigationButton(AboutButton);
+            sectionManager.RegisterNavigationButton(CartButton);
 
             sectionManager.NavigateTo("Games", GamesButton);
         }
@@ -45,11 +47,17 @@ namespace GamesShop
         private void GamesButton_Click(object sender, RoutedEventArgs e)
         {
             sectionManager.NavigateTo("Games", (Button)sender);
+
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
         {
             sectionManager.NavigateTo("Library", (Button)sender);
+        }
+
+        private void Cart_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshCartSection();
         }
 
         private void ProfileButton_Click(object sender, RoutedEventArgs e)
@@ -96,12 +104,18 @@ namespace GamesShop
             };
             logoutItem.Click += (s, args) =>
             {
-                // Логика выхода
+                
             };
 
             menu.Items.Add(profileItem);
             menu.Items.Add(logoutItem);
             menu.IsOpen = true;
+        }
+
+        public void RefreshCartSection()
+        {
+            sectionManager.RegisterSection("Cart", new CartSection(currentUsername));
+            sectionManager.NavigateTo("Cart", CartButton);
         }
     }
 }
