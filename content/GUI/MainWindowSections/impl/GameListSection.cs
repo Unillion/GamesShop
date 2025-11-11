@@ -2,10 +2,10 @@
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using GamesShop.content.game;
 using GamesShop.content.db;
 using System.Collections.Generic;
 using System;
+using GamesShop.content.models;
 
 namespace GamesShop.content.GUI.MainWindowSections.impl
 {

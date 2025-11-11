@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using GamesShop.content.db;
-using GamesShop.content.user;
+using GamesShop.content.models;
 
 namespace GamesShop
 {

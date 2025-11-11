@@ -1,5 +1,5 @@
 ﻿using GamesShop.content.db;
-using GamesShop.content.game;
+
 using GamesShop.content.GUI.MainWindowSections;
 using GamesShop.content.GUI.MainWindowSections.impl;
 using System.Windows;
@@ -40,8 +40,8 @@ namespace GamesShop
 
         private void LoadUserBalance()
         {
-            decimal balance = UserDatabaseManager.GetUserBalance(currentUsername, "USD");
-            UserBalanceText.Text = balance.ToString("F2");
+            //decimal balance = UserDatabaseManager.GetUserBalance(currentUsername, "USD");
+            //UserBalanceText.Text = balance.ToString("F2");
         }
 
         private void GamesButton_Click(object sender, RoutedEventArgs e)
@@ -89,7 +89,7 @@ namespace GamesShop
             };
             profileItem.Click += (s, args) =>
             {
-                UserDatabaseManager.UpdateUserBalance(currentUsername, "RU", 100);
+                //UserDatabaseManager.UpdateUserBalance(currentUsername, "RU", 100);
             };
 
             MenuItem logoutItem = new MenuItem

@@ -1,5 +1,4 @@
 ﻿using GamesShop.content.db;
-using GamesShop.content.game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using GamesShop.content.models;
 
 namespace GamesShop.content.GUI.MainWindowSections.impl
 {
@@ -21,7 +21,7 @@ namespace GamesShop.content.GUI.MainWindowSections.impl
         public CartSection(string username)
         {
             this.username = username;
-            this.cartGames = UserDatabaseManager.GetUserGames(username);
+            this.cartGames = UserDatabaseManager.GetUserCart(username);
         }
 
         public override string Title => "Cart";
@@ -127,7 +127,6 @@ namespace GamesShop.content.GUI.MainWindowSections.impl
                 Orientation = Orientation.Vertical
             };
 
-            // Логотип игры
             var imageBorder = new Border
             {
                 Background = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
@@ -215,14 +214,12 @@ namespace GamesShop.content.GUI.MainWindowSections.impl
 
             cardStackPanel.Children.Add(removeButton);
 
-            // Обработчик клика по карточке
             cardBorder.MouseLeftButtonDown += (s, e) =>
             {
                 // Здесь будет переход на страницу игры
 
             };
 
-            // Эффекты при наведении
             AddHoverEffects(cardBorder);
 
             cardBorder.Child = cardStackPanel;

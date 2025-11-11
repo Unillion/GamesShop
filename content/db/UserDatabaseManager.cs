@@ -1,188 +1,128 @@
-﻿using GamesShop.content.game;
-using GamesShop.content.user;
+﻿
+using GamesShop.content.models;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 
 namespace GamesShop.content.db
 {
     public class UserDatabaseManager
     {
-        private static string connectionString =
-            @"Server=MISHA1\SQLEXPRESS01;Database=gameshopdb;Trusted_Connection=True;TrustServerCertificate=True;";
-
         public static bool AddUser(User user)
         {
-            string query = @"
-                INSERT INTO Users (Username, Email, PasswordHash) 
-                VALUES (@Username, @Email, @PasswordHash);
-        
-                INSERT INTO Libraries (UserID) 
-                VALUES (IDENT_CURRENT('Users'));
-                
-                INSERT INTO Carts (UserID) 
-                VALUES (IDENT_CURRENT('Users'));
+            using (var context = new GameShopContext())
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        user.PasswordHash = HashPassword(user.Password);
+                        user.Password = null;
 
-                INSERT INTO bill (UserID)
-                VALUES (IDENT_CURRENT('Users'));";
+                        context.Users.Add(user);
+                        context.SaveChanges();
 
-            
-            return ExecuteNonQuery(
-                query,
-                new SqlParameter("@Username", user.UserName),
-                new SqlParameter("@Email", user.Email),
-                new SqlParameter("@PasswordHash", HashPassword(user.Password))
-            );
+                        var cart = new Cart { UserID = user.ID };
+                        context.Carts.Add(cart);
+
+                        var library = new Library { UserID = user.ID };
+                        context.Libraries.Add(library);
+
+                        var bill = new Bill { UserID = user.ID };
+                        context.Bills.Add(bill);
+                        context.SaveChanges();
+
+                        var balance = new Balance { BillID = bill.ID, CurrencyCode = "USD", Amount = 0 };
+                        context.Balances.Add(balance);
+
+                        context.SaveChanges();
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка: {ex.Message}\nInner: {ex.InnerException?.Message}");
+                        return false;
+                    }
+                }
+            }
         }
 
-        public static List<Game> GetUserGames(string username)
+        private static void CreateUserRelatedEntities(int userId)
         {
-            string query = @"
-                SELECT g.ID, g.Title, g.Description, g.Genre, g.Price, g.ReleaseDate, g.Rating, g.Logo
-                FROM CartItems ci
-                JOIN Carts c ON ci.CartID = c.ID
-                JOIN Users u ON c.UserID = u.ID
-                JOIN Games g ON ci.GameID = g.ID
-                WHERE u.Username = @Username";
+            using (var context = new GameShopContext())
+            {
+                var cart = new Cart { UserID = userId };
+                context.Carts.Add(cart);
 
-            return GameDatabseManager.ExecuteQuery(
-                query,
-                new SqlParameter("@Username", username)
-            );
+                var library = new Library { UserID = userId };
+                context.Libraries.Add(library);
+
+                var bill = new Bill { UserID = userId };
+                context.Bills.Add(bill);
+                context.SaveChanges();
+
+                var balance = new Balance { BillID = bill.ID, CurrencyCode = "USD", Amount = 0 };
+                context.Balances.Add(balance);
+
+                context.SaveChanges();
+            }
         }
 
-        public static int GetUserCartId(string username)
+        public static List<Game> GetUserCart(string username)
         {
-            string query = @"
-                SELECT c.ID 
-                FROM Carts c
-                JOIN Users u ON c.UserID = u.ID
-                WHERE u.Username = @Username";
-
-            return ExecuteScalar<int?>(
-                query,
-                new SqlParameter("@Username", username)
-            ) ?? 0;
+            using (var context = new GameShopContext())
+            {
+                return context.Users
+                    .Where(u => u.Username == username)
+                    .SelectMany(u => u.Cart.CartItems)
+                    .Select(ci => ci.Game)
+                    .ToList();
+            }
         }
 
         public static bool AddGameToCart(string username, int gameId)
         {
-            string query = @"
-                DECLARE @CartID INT;
-        
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users
+                    .Include(u => u.Cart)
+                    .ThenInclude(c => c.CartItems)
+                    .FirstOrDefault(u => u.Username == username);
 
-                SELECT @CartID = c.ID 
-                FROM Carts c 
-                JOIN Users u ON c.UserID = u.ID 
-                WHERE u.Username = @Username;
-        
+                if (user?.Cart == null) return false;
 
-                IF NOT EXISTS (SELECT 1 FROM CartItems WHERE CartID = @CartID AND GameID = @GameID)
-                BEGIN
+                if (!user.Cart.CartItems.Any(ci => ci.GameID == gameId))
+                {
+                    user.Cart.CartItems.Add(new CartItem
+                    {
+                        GameID = gameId
+                    });
+                    return context.SaveChanges() > 0;
+                }
 
-                INSERT INTO CartItems (CartID, GameID, Quantity) 
-                VALUES (@CartID, @GameID, @Quantity);
-                END";
-
-            return ExecuteNonQuery(
-                query,
-                new SqlParameter("@Username", username),
-                new SqlParameter("@GameID", gameId),
-                new SqlParameter("@Quantity", 1)
-            );
+                return true;
+            }
         }
 
         public static bool RemoveGameFromCart(string username, int gameId)
         {
-            string query = @"
-                DELETE ci
-                FROM CartItems ci
-                JOIN Carts c ON ci.CartID = c.ID
-                JOIN Users u ON c.UserID = u.ID
-                WHERE u.Username = @Username AND ci.GameID = @GameID";
-
-            return ExecuteNonQuery(
-                query,
-                new SqlParameter("@Username", username),
-                new SqlParameter("@GameID", gameId)
-            );
-        }
-
-        public static bool ValidateUserByUsername(string username, string password)
-        {
-            var storedHash = ExecuteScalar<string>(
-                "SELECT PasswordHash FROM Users WHERE Username = @Username",
-                new SqlParameter("@Username", username)
-            );
-
-            return storedHash != null && storedHash == HashPassword(password);
-        }
-
-        public static decimal GetUserBalance(string username, string currencyCode = "USD")
-        {
-            return ExecuteScalar<decimal?>(
-                @"SELECT b.Amount
-                  FROM Balances b
-                  JOIN bill bl ON b.BillID = bl.ID
-                  JOIN Users u ON bl.UserID = u.ID
-                  WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode",
-                new SqlParameter("@Username", username),
-                new SqlParameter("@CurrencyCode", currencyCode)
-            ) ?? 0m;
-        }
-
-        public static bool UpdateUserBalance(string username, string currencyCode, decimal newAmount)
-        {
-            return ExecuteNonQuery(
-                @"UPDATE b
-                  SET b.Amount = @Amount
-                  FROM Balances b
-                  JOIN bill bl ON b.BillID = bl.ID
-                  JOIN Users u ON bl.UserID = u.ID
-                  WHERE u.Username = @Username AND b.CurrencyCode = @CurrencyCode",
-                new SqlParameter("@Username", username),
-                new SqlParameter("@CurrencyCode", currencyCode),
-                new SqlParameter("@Amount", newAmount)
-            );
-        }
-
-
-        private static bool ExecuteNonQuery(string query, params SqlParameter[] parameters)
-        {
-            try
+            using (var context = new GameShopContext())
             {
-                using (var conn = new SqlConnection(connectionString))
-                using (var cmd = new SqlCommand(query, conn))
+                var cartItem = context.CartItems
+                    .Include(ci => ci.Cart)
+                    .ThenInclude(c => c.User)
+                    .FirstOrDefault(ci => ci.Cart.User.Username == username && ci.GameID == gameId);
+
+                if (cartItem != null)
                 {
-                    cmd.Parameters.AddRange(parameters);
-                    conn.Open();
-                    return cmd.ExecuteNonQuery() > 0;
+                    context.CartItems.Remove(cartItem);
+                    return context.SaveChanges() > 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Ошибка при выполнении запроса: {ex.Message}");
                 return false;
-            }
-        }
-
-        private static T ExecuteScalar<T>(string query, params SqlParameter[] parameters)
-        {
-            try
-            {
-                using (var conn = new SqlConnection(connectionString))
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddRange(parameters);
-                    conn.Open();
-                    var result = cmd.ExecuteScalar();
-                    return result != null && result != DBNull.Value ? (T)Convert.ChangeType(result, typeof(T)) : default(T);
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Ошибка при получении данных: {ex.Message}");
-                return default(T);
             }
         }
 
@@ -195,10 +135,15 @@ namespace GamesShop.content.db
                 return Convert.ToBase64String(hash);
             }
         }
-
-        private static void ShowError(string message)
+        public static bool ValidateUserByUsername(string username, string password)
         {
-            System.Windows.MessageBox.Show(message);
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users.FirstOrDefault(u => u.Username == username);
+                if (user == null) return false;
+
+                return user.PasswordHash == HashPassword(password);
+            }
         }
     }
 }
