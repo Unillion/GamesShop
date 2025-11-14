@@ -20,9 +20,6 @@ namespace GamesShop.content.models
         [Column("Description")]
         public string Description { get; set; }
 
-        [Column("Genre")]
-        public string Genre { get; set; }
-
         [Column("Price", TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
@@ -35,20 +32,33 @@ namespace GamesShop.content.models
         [Column("Logo")]
         public string Logo { get; set; }
 
+        [Column("Playground")]
+        public string Platform { get; set; }
+
+        [Column("AgeRating")]
+        public int AgeRating { get; set; }
+
         public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<LibraryItem> LibraryItems { get; set; }
+        public virtual ICollection<GameDevelopers> GameDevelopers { get; set; }
+        public virtual ICollection<GameLanguage> GameLanguages { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<GameGenres> GameGenres { get; set; }
 
         public Game()
         {
             CartItems = new HashSet<CartItem>();
             LibraryItems = new HashSet<LibraryItem>();
+            GameDevelopers = new HashSet<GameDevelopers>();
+            GameLanguages = new HashSet<GameLanguage>();
+            Reviews = new HashSet<Review>();
+            GameGenres = new HashSet<GameGenres>();
         }
 
-        public Game(string title, string description, string genre, decimal price, DateTime releaseDate, int rating, string logo)
+        public Game(string title, string description, decimal price, DateTime releaseDate, int rating, string logo)
         {
             Title = title;
             Description = description;
-            Genre = genre;
             Price = price;
             ReleaseDate = releaseDate;
             Rating = rating;

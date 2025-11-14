@@ -11,6 +11,14 @@ public class GameShopContext : DbContext
     public DbSet<LibraryItem> LibraryItems { get; set; }
     public DbSet<Bill> Bills { get; set; }
     public DbSet<Balance> Balances { get; set; }
+    public DbSet<Developers> Developers { get; set; }
+    public DbSet<GameDevelopers> GameDevelopers { get; set; }
+    public DbSet<Language> Languages { get; set; }
+    public DbSet<GameLanguage> GameLanguages { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<GameGenres> GameGenres { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -28,6 +36,13 @@ public class GameShopContext : DbContext
         modelBuilder.Entity<Game>().ToTable("Games");
         modelBuilder.Entity<CartItem>().ToTable("CartItems");
         modelBuilder.Entity<LibraryItem>().ToTable("LibraryItems");
+        modelBuilder.Entity<Developers>().ToTable("Developers");
+        modelBuilder.Entity<GameDevelopers>().ToTable("GameDevelopers");
+        modelBuilder.Entity<Language>().ToTable("Languages");
+        modelBuilder.Entity<GameLanguage>().ToTable("GameLanguages");
+        modelBuilder.Entity<Review>().ToTable("Reviews");
+        modelBuilder.Entity<Genre>().ToTable("Genres");
+        modelBuilder.Entity<GameGenres>().ToTable("GameGenres");
 
         modelBuilder.Entity<User>()
             .HasOne(u => u.Cart)
@@ -68,5 +83,58 @@ public class GameShopContext : DbContext
             .HasMany(g => g.LibraryItems)
             .WithOne(li => li.Game)
             .HasForeignKey(li => li.GameID);
+
+        modelBuilder.Entity<GameDevelopers>()
+            .HasOne(gd => gd.Game)
+            .WithMany(g => g.GameDevelopers)
+            .HasForeignKey(gd => gd.GameID);
+
+        modelBuilder.Entity<GameDevelopers>()
+            .HasOne(gd => gd.Developer)
+            .WithMany(d => d.GameDevelopers)
+            .HasForeignKey(gd => gd.DeveloperID);
+
+        modelBuilder.Entity<GameDevelopers>()
+            .HasIndex(gd => new { gd.GameID, gd.DeveloperID })
+            .IsUnique();
+
+        modelBuilder.Entity<GameLanguage>()
+            .HasOne(gl => gl.Game)
+            .WithMany(g => g.GameLanguages)
+            .HasForeignKey(gl => gl.GameID);
+
+        modelBuilder.Entity<GameLanguage>()
+            .HasOne(gl => gl.Language)
+            .WithMany(l => l.GameLanguages)
+            .HasForeignKey(gl => gl.LanguageID);
+
+        modelBuilder.Entity<GameLanguage>()
+            .HasIndex(gl => new { gl.GameID, gl.LanguageID })
+            .IsUnique();
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Game)
+            .WithMany(g => g.Reviews)
+            .HasForeignKey(r => r.GameID);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Reviews)
+            .HasForeignKey(r => r.UserID);
+
+        modelBuilder.Entity<GameGenres>()
+            .HasOne(gg => gg.Game)
+            .WithMany(g => g.GameGenres)
+            .HasForeignKey(gg => gg.GameID);
+
+        modelBuilder.Entity<GameGenres>()
+            .HasOne(gg => gg.Genre)
+            .WithMany(g => g.GameGenres)
+            .HasForeignKey(gg => gg.GenreID);
+
+        // Уникальный ключ для GameGenres
+        modelBuilder.Entity<GameGenres>()
+            .HasIndex(gg => new { gg.GameID, gg.GenreID })
+            .IsUnique();
     }
 }

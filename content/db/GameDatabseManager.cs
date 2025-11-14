@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GamesShop.content.db
 {
@@ -28,14 +29,21 @@ namespace GamesShop.content.db
             }
         }
 
-        public static List<Game> GetGamesByGenre(string genre)
+        public static Game GetGameWithDetails(int id)
         {
             using (var context = new GameShopContext())
             {
                 return context.Games
                     .AsNoTracking()
-                    .Where(g => g.Genre == genre)
-                    .ToList();
+                    .Include(g => g.GameGenres)
+                        .ThenInclude(gg => gg.Genre)
+                    .Include(g => g.GameDevelopers)
+                        .ThenInclude(gd => gd.Developer)
+                    .Include(g => g.GameLanguages)
+                        .ThenInclude(gl => gl.Language)
+                    .Include(g => g.Reviews)
+                        .ThenInclude(r => r.User)
+                    .FirstOrDefault(g => g.ID == id);
             }
         }
 
@@ -46,6 +54,138 @@ namespace GamesShop.content.db
                 return context.Games
                     .AsNoTracking()
                     .Where(g => g.Title.Contains(searchTerm) || g.Description.Contains(searchTerm))
+                    .ToList();
+            }
+        }
+
+        public static List<Genre> GetGameGenres(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameGenres
+                    .AsNoTracking()
+                    .Where(gg => gg.GameID == gameId)
+                    .Select(gg => gg.Genre)
+                    .ToList();
+            }
+        }
+
+        public static List<Developers> GetGameDevelopers(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameDevelopers
+                    .AsNoTracking()
+                    .Where(gd => gd.GameID == gameId)
+                    .Select(gd => gd.Developer)
+                    .ToList();
+            }
+        }
+
+        public static List<Language> GetGameLanguages(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameLanguages
+                    .AsNoTracking()
+                    .Where(gl => gl.GameID == gameId)
+                    .Select(gl => gl.Language)
+                    .ToList();
+            }
+        }
+
+        public static List<Review> GetGameReviews(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Reviews
+                    .AsNoTracking()
+                    .Where(r => r.GameID == gameId)
+                    .Include(r => r.User)
+                    .OrderByDescending(r => r.ReviewDate)
+                    .ToList();
+            }
+        }
+
+        public static List<Genre> GetAllGenres()
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Genres
+                    .AsNoTracking()
+                    .OrderBy(g => g.Name)
+                    .ToList();
+            }
+        }
+
+        public static List<Developers> GetAllDevelopers()
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Developers
+                    .AsNoTracking()
+                    .OrderBy(d => d.Name)
+                    .ToList();
+            }
+        }
+
+        public static List<Language> GetAllLanguages()
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Languages
+                    .AsNoTracking()
+                    .OrderBy(l => l.LanguageName)
+                    .ToList();
+            }
+        }
+        public static bool AddReview(Review review)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    context.Reviews.Add(review);
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при добавлении отзыва: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static int GetGameReviewsCount(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Reviews
+                    .AsNoTracking()
+                    .Count(r => r.GameID == gameId);
+            }
+        }
+
+        public static List<Game> GetGamesByGenre(int genreId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameGenres
+                    .AsNoTracking()
+                    .Where(gg => gg.GenreID == genreId)
+                    .Select(gg => gg.Game)
+                    .ToList();
+            }
+        }
+
+        public static List<Game> GetGamesByDeveloper(int developerId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameDevelopers
+                    .AsNoTracking()
+                    .Where(gd => gd.DeveloperID == developerId)
+                    .Select(gd => gd.Game)
                     .ToList();
             }
         }
@@ -84,6 +224,45 @@ namespace GamesShop.content.db
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show($"Ошибка при обновлении игры: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static bool UpdateGameRating(int gameId, double newRating)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var game = context.Games.Find(gameId);
+                    if (game == null) return false;
+
+                    game.Rating = (int)Math.Round(newRating, 1);
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при обновлении рейтинга игры: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+        public static bool UpdateGameRating(int gameId, int newRating)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var game = context.Games.Find(gameId);
+                    if (game == null) return false;
+
+                    game.Rating = newRating;
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при обновлении рейтинга игры: {ex.Message}");
                     return false;
                 }
             }

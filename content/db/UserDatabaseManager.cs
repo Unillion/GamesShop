@@ -84,6 +84,12 @@ namespace GamesShop.content.db
             }
         }
 
+        public static bool IsGameInCart(string username, int gameId)
+        {
+            var cartGames = GetUserCart(username);
+            return cartGames.Any(game => game.ID == gameId);
+        }
+
         public static bool AddGameToCart(string username, int gameId)
         {
             using (var context = new GameShopContext())
@@ -143,6 +149,26 @@ namespace GamesShop.content.db
                 if (user == null) return false;
 
                 return user.PasswordHash == HashPassword(password);
+            }
+        }
+
+        public static int GetUserId(string username)
+        {
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users
+                    .FirstOrDefault(u => u.Username == username);
+
+                return user?.ID ?? -1;
+            }
+        }
+
+        public static bool UserHasReviewForGame(string username, int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Reviews
+                    .Any(r => r.User.Username == username && r.GameID == gameId);
             }
         }
     }

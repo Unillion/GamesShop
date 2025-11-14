@@ -30,8 +30,9 @@ namespace GamesShop.content.models
         public virtual Cart Cart { get; set; }
         public virtual Library Library { get; set; }
         public virtual Bill Bill { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
 
-        public User() { }
+        public User() { Reviews = new HashSet<Review>(); }
 
         public User(string username, string email, string password)
         {
