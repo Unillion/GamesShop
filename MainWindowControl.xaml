@@ -320,29 +320,13 @@
                               FontWeight="Bold" HorizontalAlignment="Center"
                               Margin="0,0,0,15"/>
 
-                                <Button x:Name="BuyGameButton" Content="Купить" 
-                           Background="#108BEF" Foreground="White"
-                           FontSize="16" FontWeight="Bold" 
-                           Height="40" Cursor="Hand"
-                           Click="BuyGameButton_Click">
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#1478DC"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-
                                 <!-- Кнопка "В корзину" как альтернатива -->
                                 <Button x:Name="AddToCartDetailsButton" Content="В корзину" 
-                           Background="Transparent" Foreground="#108BEF"
-                           FontSize="14" FontWeight="Bold" 
-                           BorderBrush="#108BEF" BorderThickness="1"
-                           Height="35" Cursor="Hand" Margin="0,10,0,0"
-                           Click="AddToCartDetailsButton_Click">
+                                    Background="Transparent" Foreground="White"
+                                    FontSize="14" FontWeight="Bold" 
+                                    BorderBrush="#108BEF" BorderThickness="1"
+                                    Height="35" Cursor="Hand" Margin="0,10,0,0"
+                                    Click="AddToCartDetailsButton_Click">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Style.Triggers>

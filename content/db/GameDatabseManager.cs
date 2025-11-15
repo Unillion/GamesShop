@@ -248,6 +248,87 @@ namespace GamesShop.content.db
                 }
             }
         }
+
+        public static bool AddLikeToReview(int reviewId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var review = context.Reviews.Find(reviewId);
+                    if (review == null) return false;
+
+                    review.Likes++;
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при добавлении лайка: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static bool AddDislikeToReview(int reviewId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var review = context.Reviews.Find(reviewId);
+                    if (review == null) return false;
+
+                    review.Dislikes++;
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при добавлении дизлайка: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static bool RemoveLikeFromReview(int reviewId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var review = context.Reviews.Find(reviewId);
+                    if (review == null) return false;
+
+                    review.Likes--;
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при добавлении лайка: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static bool RemoveDislikeFromReview(int reviewId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var review = context.Reviews.Find(reviewId);
+                    if (review == null) return false;
+
+                    review.Dislikes--;
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при добавлении дизлайка: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
         public static bool UpdateGameRating(int gameId, int newRating)
         {
             using (var context = new GameShopContext())
