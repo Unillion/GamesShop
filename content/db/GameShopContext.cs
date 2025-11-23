@@ -9,8 +9,6 @@ public class GameShopContext : DbContext
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Library> Libraries { get; set; }
     public DbSet<LibraryItem> LibraryItems { get; set; }
-    public DbSet<Bill> Bills { get; set; }
-    public DbSet<Balance> Balances { get; set; }
     public DbSet<Developers> Developers { get; set; }
     public DbSet<GameDevelopers> GameDevelopers { get; set; }
     public DbSet<Language> Languages { get; set; }
@@ -23,7 +21,7 @@ public class GameShopContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            @"Server=MISHA1\SQLEXPRESS01;Database=gameshopdb;Trusted_Connection=True;TrustServerCertificate=True;");
+            @"Server=MISHA1\SQLEXPRESS01;Database=gamesbd_1;Trusted_Connection=True;TrustServerCertificate=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,8 +29,6 @@ public class GameShopContext : DbContext
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<Cart>().ToTable("Carts");
         modelBuilder.Entity<Library>().ToTable("Libraries");
-        modelBuilder.Entity<Bill>().ToTable("bill");
-        modelBuilder.Entity<Balance>().ToTable("Balances");
         modelBuilder.Entity<Game>().ToTable("Games");
         modelBuilder.Entity<CartItem>().ToTable("CartItems");
         modelBuilder.Entity<LibraryItem>().ToTable("LibraryItems");
@@ -53,16 +49,6 @@ public class GameShopContext : DbContext
             .HasOne(u => u.Library)
             .WithOne(l => l.User)
             .HasForeignKey<Library>(l => l.UserID);
-
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Bill)
-            .WithOne(b => b.User)
-            .HasForeignKey<Bill>(b => b.UserID);
-
-        modelBuilder.Entity<Bill>()
-            .HasMany(b => b.Balances)
-            .WithOne(bal => bal.Bill)
-            .HasForeignKey(bal => bal.BillID);
 
         modelBuilder.Entity<Cart>()
             .HasMany(c => c.CartItems)
@@ -132,7 +118,6 @@ public class GameShopContext : DbContext
             .WithMany(g => g.GameGenres)
             .HasForeignKey(gg => gg.GenreID);
 
-        // Уникальный ключ для GameGenres
         modelBuilder.Entity<GameGenres>()
             .HasIndex(gg => new { gg.GameID, gg.GenreID })
             .IsUnique();

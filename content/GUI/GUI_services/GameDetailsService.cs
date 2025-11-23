@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using GamesShop.content.utilities;
 
 namespace GamesShop.content.GUI.GUI_services
 {
@@ -270,204 +271,51 @@ namespace GamesShop.content.GUI.GUI_services
         {
             if (currentGame == null)
             {
-                MessageBox.Show("Не выбрана игра для отзыва", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                DialogueHelper.ShowMessage("Ошибка", "Не выбрана игра для отзыва");
                 return;
             }
 
             if (UserDatabaseManager.UserHasReviewForGame(username, currentGame.ID))
             {
-                MessageBox.Show("Вы уже оставили отзыв на эту игру!", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                DialogueHelper.ShowMessage("Ошибка", "Вы уже оставили отзыв на эту игру!");
                 return;
             }
 
-            var reviewDialog = new Window
+            DialogueHelper.ShowAddReviewDialog($"Добавить отзыв на игру: {currentGame.Title}", (review) =>
             {
-                Title = "Добавить отзыв",
-                Width = 500,
-                Height = 400,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow,
-                ResizeMode = ResizeMode.NoResize,
-                Background = new SolidColorBrush(Color.FromRgb(45, 45, 45))
-            };
-
-            var mainStackPanel = new StackPanel
-            {
-                Margin = new Thickness(20)
-            };
-
-            var titleText = new TextBlock
-            {
-                Text = $"Отзыв на игру: {currentGame.Title}",
-                Foreground = Brushes.White,
-                FontSize = 16,
-                FontWeight = FontWeights.Bold,
-                Margin = new Thickness(0, 0, 0, 20),
-                TextAlignment = TextAlignment.Center
-            };
-            mainStackPanel.Children.Add(titleText);
-
-            var ratingPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 15)
-            };
-
-            ratingPanel.Children.Add(new TextBlock
-            {
-                Text = "Оценка:",
-                Foreground = Brushes.White,
-                FontSize = 14,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 0, 10, 0)
-            });
-
-            var starsPanel = new StackPanel { Orientation = Orientation.Horizontal };
-            int selectedRating = 0;
-
-            for (int i = 1; i <= 5; i++)
-            {
-                var starButton = new Button
+                if (review != null)
                 {
-                    Content = "☆",
-                    Foreground = new SolidColorBrush(Color.FromRgb(150, 150, 150)),
-                    Background = Brushes.Transparent,
-                    BorderThickness = new Thickness(0),
-                    FontSize = 20,
-                    Tag = i,
-                    Margin = new Thickness(5, 0, 5, 0),
-                    Padding = new Thickness(5),
-                    Cursor = Cursors.Hand
-                };
-
-                starButton.Click += (s, args) =>
-                {
-                    selectedRating = (int)((Button)s).Tag;
-                    foreach (Button star in starsPanel.Children)
+                    try
                     {
-                        int starValue = (int)star.Tag;
-                        star.Content = starValue <= selectedRating ? "★" : "☆";
-                        star.Foreground = starValue <= selectedRating ? Brushes.Gold : new SolidColorBrush(Color.FromRgb(150, 150, 150));
+                        var newReview = new Review
+                        {
+                            GameID = currentGame.ID,
+                            UserID = userId,
+                            ReviewText = review.ReviewText,
+                            Rating = review.Rating,
+                            ReviewDate = DateTime.Now
+                        };
+
+                        bool success = GameDatabseManager.AddReview(newReview);
+
+                        if (success)
+                        {
+                            DialogueHelper.ShowMessage("Успех", "Отзыв успешно опубликован!");
+
+                            LoadGameReviews(currentGame.ID);
+                            UpdateGameRating();
+                        }
+                        else
+                        {
+                            DialogueHelper.ShowMessage("Ошибка", "Ошибка при добавлении отзыва");
+                        }
                     }
-                };
-
-                starsPanel.Children.Add(starButton);
-            }
-
-            ratingPanel.Children.Add(starsPanel);
-            mainStackPanel.Children.Add(ratingPanel);
-
-            var reviewTextLabel = new TextBlock
-            {
-                Text = "Текст отзыва:",
-                Foreground = Brushes.White,
-                FontSize = 14,
-                Margin = new Thickness(0, 0, 0, 5)
-            };
-            mainStackPanel.Children.Add(reviewTextLabel);
-
-            var reviewTextBox = new TextBox
-            {
-                Height = 150,
-                TextWrapping = TextWrapping.Wrap,
-                AcceptsReturn = true,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Background = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
-                Foreground = Brushes.White,
-                BorderBrush = new SolidColorBrush(Color.FromRgb(100, 100, 100)),
-                BorderThickness = new Thickness(1),
-                FontSize = 12,
-                Padding = new Thickness(10)
-            };
-            mainStackPanel.Children.Add(reviewTextBox);
-
-            var buttonsPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Margin = new Thickness(0, 20, 0, 0)
-            };
-
-            var cancelButton = new Button
-            {
-                Content = "Отмена",
-                Width = 100,
-                Height = 30,
-                Background = new SolidColorBrush(Color.FromRgb(100, 100, 100)),
-                Foreground = Brushes.White,
-                Margin = new Thickness(0, 0, 10, 0),
-                Cursor = Cursors.Hand
-            };
-            cancelButton.Click += (s, args) => reviewDialog.Close();
-
-            var submitButton = new Button
-            {
-                Content = "Опубликовать",
-                Width = 120,
-                Height = 30,
-                Background = new SolidColorBrush(Color.FromRgb(70, 130, 180)),
-                Foreground = Brushes.White,
-                FontWeight = FontWeights.Bold,
-                Cursor = Cursors.Hand
-            };
-            submitButton.Click += (s, args) =>
-            {
-                if (selectedRating == 0)
-                {
-                    MessageBox.Show("Пожалуйста, поставьте оценку", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    catch (Exception ex)
+                    {
+                        DialogueHelper.ShowMessage("Ошибка", $"Ошибка при добавлении отзыва: {ex.Message}");
+                    }
                 }
-
-                if (string.IsNullOrWhiteSpace(reviewTextBox.Text))
-                {
-                    MessageBox.Show("Пожалуйста, напишите текст отзыва", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (reviewTextBox.Text.Length < 10)
-                {
-                    MessageBox.Show("Отзыв должен содержать минимум 10 символов", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                var newReview = new Review
-                {
-                    GameID = currentGame.ID,
-                    UserID = userId,
-                    ReviewText = reviewTextBox.Text.Trim(),
-                    Rating = selectedRating,
-                    ReviewDate = DateTime.Now
-                };
-
-                bool success = GameDatabseManager.AddReview(newReview);
-
-                if (success)
-                {
-                    MessageBox.Show("Отзыв успешно опубликован!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                    reviewDialog.Close();
-
-                    LoadGameReviews(currentGame.ID);
-                    UpdateGameRating();
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка при добавлении отзыва", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            };
-
-            buttonsPanel.Children.Add(cancelButton);
-            buttonsPanel.Children.Add(submitButton);
-            mainStackPanel.Children.Add(buttonsPanel);
-
-            reviewDialog.Content = mainStackPanel;
-            reviewDialog.ShowDialog();
+            });
         }
 
         public void UpdateAddToCartButton()

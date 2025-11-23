@@ -1,6 +1,8 @@
 ﻿using GamesShop.content.db;
 using GamesShop.content.GUI.GUI_services;
 using GamesShop.content.models;
+using GamesShop.content.utilities;
+using GamesShop.dialogueUserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,11 +49,14 @@ namespace GamesShop
             InitializeEventHandlers();
             InitializeData();
             ShowGamesSection();
+
+            BalanceManager.UserBalanceChanged += OnUserBalanceChanged;
         }
 
         private void InitializeData()
         {
             games = GameDatabseManager.GetAllGames();
+            UserBalanceText.Text = UserDatabaseManager.GetUserBalance(username).ToString() + "₽";
             cartGames = UserDatabaseManager.GetUserCart(username);
 
             WelcomeText.Text = $"Добро пожаловать, {username}!";
@@ -84,6 +89,13 @@ namespace GamesShop
             gameDetailsService.AddToCartDetailsButton = AddToCartDetailsButton;
         }
 
+        private void OnUserBalanceChanged(string username, decimal newBalance)
+        {
+            if (username == this.username)
+            {
+                RefreshBalance(newBalance.ToString("F2"));
+            }
+        }
         private void GamesButton_Click(object sender, RoutedEventArgs e)
         {
             ShowGamesSection();
@@ -164,6 +176,11 @@ namespace GamesShop
             cartService.RenderCart(CartItemsControl, CartEmptyText, TotalPriceText, CheckoutButton);
         }
 
+        public void RefreshBalance(string newBalance)
+        {
+            UserBalanceText.Text = newBalance + "₽";
+        }
+
         private void OnCartUpdated()
         {
             if (currentGame != null && GameDetailsSection.Visibility == Visibility.Visible)
@@ -178,6 +195,17 @@ namespace GamesShop
             {
                 RefreshGames();
             }
+        }
+
+        private void AddToBalance_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new AddBalanceDialogue();
+            dialog.BalanceAdded += (amount) =>
+            {
+                BalanceManager.UpdateBalance(username, amount);
+            };
+
+            dialog.ShowDialog();
         }
     }
 

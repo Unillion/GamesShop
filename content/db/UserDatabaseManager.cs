@@ -21,6 +21,8 @@ namespace GamesShop.content.db
                         user.PasswordHash = HashPassword(user.Password);
                         user.Password = null;
 
+                        user.Balance = 0;
+
                         context.Users.Add(user);
                         context.SaveChanges();
 
@@ -29,13 +31,6 @@ namespace GamesShop.content.db
 
                         var library = new Library { UserID = user.ID };
                         context.Libraries.Add(library);
-
-                        var bill = new Bill { UserID = user.ID };
-                        context.Bills.Add(bill);
-                        context.SaveChanges();
-
-                        var balance = new Balance { BillID = bill.ID, CurrencyCode = "USD", Amount = 0 };
-                        context.Balances.Add(balance);
 
                         context.SaveChanges();
                         transaction.Commit();
@@ -61,13 +56,6 @@ namespace GamesShop.content.db
                 var library = new Library { UserID = userId };
                 context.Libraries.Add(library);
 
-                var bill = new Bill { UserID = userId };
-                context.Bills.Add(bill);
-                context.SaveChanges();
-
-                var balance = new Balance { BillID = bill.ID, CurrencyCode = "USD", Amount = 0 };
-                context.Balances.Add(balance);
-
                 context.SaveChanges();
             }
         }
@@ -81,6 +69,17 @@ namespace GamesShop.content.db
                     .SelectMany(u => u.Cart.CartItems)
                     .Select(ci => ci.Game)
                     .ToList();
+            }
+        }
+
+        public static decimal GetUserBalance(string username)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Users
+                    .Where(u => u.Username == username)
+                    .Select(u => u.Balance)
+                    .FirstOrDefault();
             }
         }
 
@@ -160,6 +159,21 @@ namespace GamesShop.content.db
                     .FirstOrDefault(u => u.Username == username);
 
                 return user?.ID ?? -1;
+            }
+        }
+
+        public static bool AddToUserBalance(string username, decimal amount)
+        {
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users.FirstOrDefault(u => u.Username == username);
+                if (user != null)
+                {
+                    user.Balance += amount;
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
         }
 

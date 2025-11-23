@@ -1,0 +1,34 @@
+﻿<Window x:Class="GamesShop.dialogueUserControls.ConfirmationDialogue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GamesShop.dialogueUserControls"
+             mc:Ignorable="d" 
+             WindowStartupLocation="CenterScreen"
+             Width="400" Height="150">
+    <Border Background="#2D2D2D" CornerRadius="8" Padding="20">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock x:Name="MessageText" 
+                      Text="Вы уверены?" 
+                      Foreground="White" 
+                      FontSize="14" 
+                      TextWrapping="Wrap"
+                      TextAlignment="Center"
+                      Margin="0,0,0,20"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="YesButton" 
+                        Content="Да" 
+                        Style="{StaticResource DialogButtonStyle}"
+                        Margin="0,0,10,0"
+                        Click="YesButton_Click"/>
+
+                <Button x:Name="NoButton" 
+                        Content="Нет" 
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Click="NoButton_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

@@ -280,6 +280,11 @@
                           FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
                 <TextBlock x:Name="ProfileUsernameText" Text="Имя пользователя" 
                           Foreground="White" FontSize="16" HorizontalAlignment="Center"/>
+                <Button x:Name="ToBalance" Content="Пополнить Баланс" 
+                        Background="#108BEF" Foreground="White" FontSize="16" 
+                        FontWeight="Bold" Margin="0,20,0,0" 
+                        HorizontalAlignment="Center" Cursor="Hand" 
+                        Click="AddToBalance_Click"/>
             </StackPanel>
 
             <!-- Секция страницы игры -->

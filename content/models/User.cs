@@ -27,9 +27,11 @@ namespace GamesShop.content.models
         [Column("PasswordHash")]
         public string PasswordHash { get; set; }
 
+        [Column("Balance")]
+        public decimal Balance { get; set; }
+
         public virtual Cart Cart { get; set; }
         public virtual Library Library { get; set; }
-        public virtual Bill Bill { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
 
         public User() { Reviews = new HashSet<Review>(); }
