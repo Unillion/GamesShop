@@ -113,6 +113,30 @@ namespace GamesShop.content.db
             }
         }
 
+        public static bool AddGameToLibrary(string username, int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users
+                    .Include(u => u.Library)
+                    .ThenInclude(c => c.LibraryItems)
+                    .FirstOrDefault(u => u.Username == username);
+
+                if (user?.Library == null) return false;
+
+                if (!user.Library.LibraryItems.Any(ci => ci.GameID == gameId))
+                {
+                    user.Library.LibraryItems.Add(new LibraryItem
+                    {
+                        GameID = gameId
+                    });
+                    return context.SaveChanges() > 0;
+                }
+
+                return true;
+            }
+        }
+
         public static bool RemoveGameFromCart(string username, int gameId)
         {
             using (var context = new GameShopContext())

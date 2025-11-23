@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using GamesShop.content.GUI.factories;
+using GamesShop.content.utilities;
 
 namespace GamesShop.content.GUI.GUI_services
 {
@@ -97,35 +98,25 @@ namespace GamesShop.content.GUI.GUI_services
             }
 
             decimal totalPrice = cartGames.Sum(g => g.Price);
-            var result = MessageBox.Show(
+
+            var result = false;
+                DialogueHelper.ShowConfirmation(
                 $"Вы уверены, что хотите оформить заказ на сумму {totalPrice:F2} $?",
-                "Подтверждение заказа",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question
-            );
+                "Подтверждение заказа", (actiob) => { if (actiob) result = true; });
 
-            if (result == MessageBoxResult.Yes)
+            if (result && UserDatabaseManager.GetUserBalance(username) >= totalPrice)
             {
-                try
+                foreach (var game in cartGames)
                 {
-                    // Здесь будет логика оформления заказа
-                    // Пока просто очищаем корзину
-                    foreach (var game in cartGames)
-                    {
-                        UserDatabaseManager.RemoveGameFromCart(username, game.ID);
-                    }
+                     UserDatabaseManager.RemoveGameFromCart(username, game.ID);
+                    UserDatabaseManager.AddGameToLibrary(username, game.ID);
+                }
 
-                    LoadCart();
-                    OnCartUpdated?.Invoke();
-                    MessageBox.Show("Заказ успешно оформлен!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Ошибка при оформлении заказа: {ex.Message}", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                LoadCart();
+                OnCartUpdated?.Invoke();
+                DialogueHelper.ShowMessage("Оформление", "Все игры успешно куплены!");
             }
+            else DialogueHelper.ShowMessage("Ошибка", "Недостаточно средств! :(");
         }
 
         public void RemoveFromCart(int gameId)
