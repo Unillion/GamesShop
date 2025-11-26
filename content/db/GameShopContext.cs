@@ -16,7 +16,7 @@ public class GameShopContext : DbContext
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<GameGenres> GameGenres { get; set; }
-
+    public DbSet<GameStatistics> GameStatistics { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -39,6 +39,13 @@ public class GameShopContext : DbContext
         modelBuilder.Entity<Review>().ToTable("Reviews");
         modelBuilder.Entity<Genre>().ToTable("Genres");
         modelBuilder.Entity<GameGenres>().ToTable("GameGenres");
+        modelBuilder.Entity<GameStatistics>().ToTable("GameStatistics");
+
+        modelBuilder.Entity<Game>()
+            .HasOne(g => g.GameStatistics)
+            .WithOne(gs => gs.Game)
+            .HasForeignKey<GameStatistics>(gs => gs.GameID)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<User>()
             .HasOne(u => u.Cart)

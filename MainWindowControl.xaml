@@ -299,7 +299,7 @@
                         Click="AddToBalance_Click"/>
             </StackPanel>
 
-            <!-- секция ишры в бибилотеке-->
+            <!-- секция игры в библиотеке-->
             <ScrollViewer x:Name="GameLibDetailsSection" Visibility="Collapsed" 
                     VerticalScrollBarVisibility="Auto" Background="Transparent" 
                     Padding="20">
@@ -312,9 +312,9 @@
                     <StackPanel Grid.Column="0" Margin="0,0,30,0">
                         <Border Background="#3C3C3C" Height="400" CornerRadius="8" Margin="0,0,0,20">
                             <Image x:Name="GameLibDetailsImage" 
-                                Source="/content/Images/default_game.png" 
-                                Stretch="Uniform" 
-                                Height="400"/>
+                            Source="/content/Images/default_game.png" 
+                            Stretch="Uniform" 
+                            Height="400"/>
                         </Border>
 
                         <Button x:Name="LibBackButton" 
@@ -362,12 +362,45 @@
 
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
                             <StackPanel>
-                                <TextBlock Text="Ключ активации" Foreground="White" 
-                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <TextBlock Name="ActivationKey" Foreground="White" 
-                                    FontSize="16" Margin="0,0,0,10"/>
+                                    <TextBlock Text="Ключ активации" 
+                                       Foreground="White" 
+                                       FontSize="16" 
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
 
+                                    <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" 
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand" Click="CopyActivationKey_Click" Padding="5" Width="30" Height="30">
+                                        <Image Source="/content/Images/copy_icon.png" 
+                                        Width="20" 
+                                        Height="20"
+                                        ToolTip="Скопировать ключ активации"/>
+                                    </Button>
+
+                                    <Button x:Name="UpdateActivationKey" 
+                                        Grid.Column="2"
+                                        Background="Transparent" 
+                                        BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" 
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand" Click="UpdateActivationKey_Click" Padding="5" Width="30" Height="30">
+                                        <Image Source="/content/Images/refresh_icon.png" 
+                                           Width="20" 
+                                           Height="20"
+                                           ToolTip="Обновить ключ активации"/>
+                                    </Button>
+                                </Grid>
+
+                                <TextBlock Name="ActivationKey" 
+                                   Foreground="White" 
+                                   FontSize="16" 
+                                   Margin="0,10,0,0"/>
                             </StackPanel>
                         </Border>
 
@@ -376,8 +409,11 @@
                                 <TextBlock Text="Статистика по игре" Foreground="White" 
                                     FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
 
-                                <TextBlock Name="GameStatistics" Foreground="White" 
-                                    FontSize="16" Margin="0,0,0,10"/>
+                                <StackPanel x:Name="GameStatisticsPanel">
+                                    <TextBlock x:Name="GameStatisticsPanelText" Text="Загрузка статистики..." 
+                                        Foreground="#B4B4B4" FontSize="14"
+                                        FontStyle="Italic"/>
+                                </StackPanel>
 
                             </StackPanel>
                         </Border>

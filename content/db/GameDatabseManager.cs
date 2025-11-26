@@ -194,15 +194,33 @@ namespace GamesShop.content.db
         {
             using (var context = new GameShopContext())
             {
-                try
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    context.Games.Add(game);
-                    return context.SaveChanges() > 0;
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show($"Ошибка при добавлении игры: {ex.Message}");
-                    return false;
+                    try
+                    {
+                        context.Games.Add(game);
+                        context.SaveChanges();
+
+                        var gameStatistics = new GameStatistics
+                        {
+                            GameID = game.ID,
+                            TotalPurchases = 0,
+                            UsersKeyRefreshes = 0,
+                            LastUpdated = DateTime.Now
+                        };
+
+                        context.GameStatistics.Add(gameStatistics);
+                        context.SaveChanges();
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        System.Windows.MessageBox.Show($"Ошибка при добавлении игры: {ex.Message}");
+                        return false;
+                    }
                 }
             }
         }
@@ -366,6 +384,86 @@ namespace GamesShop.content.db
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show($"Ошибка при удалении игры: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static GameStatistics GetGameStatistics(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.GameStatistics
+                    .AsNoTracking()
+                    .FirstOrDefault(gs => gs.GameID == gameId);
+            }
+        }
+
+        public static bool IncrementPurchaseCount(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var statistics = context.GameStatistics
+                        .FirstOrDefault(gs => gs.GameID == gameId);
+
+                    if (statistics != null)
+                    {
+                        statistics.TotalPurchases++;
+                        statistics.LastUpdated = DateTime.Now;
+                    }
+                    else
+                    {
+                        statistics = new GameStatistics
+                        {
+                            GameID = gameId,
+                            TotalPurchases = 1,
+                            LastUpdated = DateTime.Now
+                        };
+                        context.GameStatistics.Add(statistics);
+                    }
+
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при обновлении счетчика покупок: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public static bool IncrementKeyRefreshes(int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                try
+                {
+                    var statistics = context.GameStatistics
+                        .FirstOrDefault(gs => gs.GameID == gameId);
+
+                    if (statistics != null)
+                    {
+                        statistics.UsersKeyRefreshes++;
+                        statistics.LastUpdated = DateTime.Now;
+                    }
+                    else
+                    {
+                        statistics = new GameStatistics
+                        {
+                            GameID = gameId,
+                            UsersKeyRefreshes = 1,
+                            LastUpdated = DateTime.Now
+                        };
+                        context.GameStatistics.Add(statistics);
+                    }
+
+                    return context.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Ошибка при обновлении счетчика обновлений ключей: {ex.Message}");
                     return false;
                 }
             }

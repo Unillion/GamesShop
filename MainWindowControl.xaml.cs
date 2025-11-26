@@ -102,7 +102,7 @@ namespace GamesShop
             gameLibraryDetailsService.GameDetailsFeatures = GameLibDetailsFeatures;
             gameLibraryDetailsService.GameDetailsReleaseDate = GameLibDetailsReleaseDate;
             gameLibraryDetailsService.GameLibraryAcivationKey = ActivationKey;
-            gameLibraryDetailsService.GameDetailsStatistics = GameStatistics;
+            gameLibraryDetailsService.GameDetailsStatistics = GameStatisticsPanelText;
 
         }
 
@@ -189,6 +189,8 @@ namespace GamesShop
             currentGame = game;
             navigationService.ShowGameLibDetails(game);
             gameLibraryDetailsService.LoadGameDetails(game);
+            LoadGameStatistics(game.ID);
+            createRandomKey();
         }
 
         public void RefreshGames()
@@ -236,6 +238,43 @@ namespace GamesShop
         private void BackFromLibButton_Click(object sender, RoutedEventArgs e)
         {
             navigationService.ReturnToPreviousView(false);
+        }
+
+        private void LoadGameStatistics(int gameID)
+        {
+            var statistics = GameDatabseManager.GetGameStatistics(gameID);
+
+            string statsText;
+
+            if (statistics == null)
+            {
+                statsText = "Статистика недоступна";
+            }
+            else
+            {
+                statsText = $"🛒 Всего покупок: {statistics.TotalPurchases}\n" +
+                           $"🔑 Обновлений ключей: {statistics.UsersKeyRefreshes}\n" +
+                           $"📅 Последнее обновление: {statistics.LastUpdated:dd.MM.yyyy HH:mm}";
+            }
+
+            GameStatisticsPanelText.Text = statsText;
+            GameStatisticsPanelText.Foreground = Brushes.White;
+            GameStatisticsPanelText.FontStyle = FontStyles.Normal;
+        }
+
+        private void createRandomKey()
+        {
+            ActivationKey.Text = Guid.NewGuid().ToString("D").ToUpper().Substring(0, 23);
+        }
+
+        private void UpdateActivationKey_Click(object sender, RoutedEventArgs e)
+        {
+            createRandomKey();
+        }
+
+        private void CopyActivationKey_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(ActivationKey.Text);
         }
     }
 

@@ -38,6 +38,7 @@ namespace GamesShop.content.models
         [Column("AgeRating")]
         public int AgeRating { get; set; }
 
+        public virtual GameStatistics GameStatistics { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<LibraryItem> LibraryItems { get; set; }
         public virtual ICollection<GameDevelopers> GameDevelopers { get; set; }
