@@ -72,6 +72,27 @@ namespace GamesShop.content.db
             }
         }
 
+        public static bool isUserExist(string username)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Users
+                    .Any(u => u.Username == username);
+            }
+        }
+
+        public static List<Game> GetUserLibrary(string username)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Users
+                    .Where(u => u.Username == username)
+                    .SelectMany(u => u.Library.LibraryItems)
+                    .Select(ci => ci.Game)
+                    .ToList();
+            }
+        }
+
         public static decimal GetUserBalance(string username)
         {
             using (var context = new GameShopContext())
@@ -137,6 +158,15 @@ namespace GamesShop.content.db
             }
         }
 
+        public static bool IsGamePurchased(string username, int gameId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.LibraryItems
+                    .Any(l => l.Library.User.Username == username && l.GameID == gameId);
+            }
+        }
+
         public static bool RemoveGameFromCart(string username, int gameId)
         {
             using (var context = new GameShopContext())
@@ -194,6 +224,22 @@ namespace GamesShop.content.db
                 if (user != null)
                 {
                     user.Balance += amount;
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public static bool removeFromUserBalance(string username, decimal amount)
+        {
+            using (var context = new GameShopContext())
+            {
+                var user = context.Users.FirstOrDefault(u => u.Username == username);
+                if (user != null)
+                {
+                    user.Balance = user.Balance - amount;
+
                     context.SaveChanges();
                     return true;
                 }

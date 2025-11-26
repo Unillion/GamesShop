@@ -18,10 +18,12 @@ namespace GamesShop.content.GUI.GUI_services
         private List<Game> cartGames;
         public Action<Game> OnGameCardClick { get; set; }
         public Action OnCartUpdated { get; set; }
+        private MainWindowControl window;
 
-        public CartService(string username)
+        public CartService(string username, MainWindowControl mainWindow)
         {
             this.username = username;
+            this.window = mainWindow;
             LoadCart();
         }
 
@@ -74,7 +76,7 @@ namespace GamesShop.content.GUI.GUI_services
             {
                 var gameCard = GameCardFactory.CreateGameCard(
                     game,
-                    true,
+                    true, false,
                     username,
                     OnGameCardClickInternal,
                     OnRemoveFromCart
@@ -100,16 +102,19 @@ namespace GamesShop.content.GUI.GUI_services
             decimal totalPrice = cartGames.Sum(g => g.Price);
 
             var result = false;
-                DialogueHelper.ShowConfirmation(
-                $"Вы уверены, что хотите оформить заказ на сумму {totalPrice:F2} $?",
-                "Подтверждение заказа", (actiob) => { if (actiob) result = true; });
+            DialogueHelper.ShowConfirmation(
+            $"Подтверждение заказа",
+            $"Вы уверены, что хотите оформить заказ на сумму {totalPrice:F2} $?", (actiob) => { if (actiob) result = true; });
 
             if (result && UserDatabaseManager.GetUserBalance(username) >= totalPrice)
             {
                 foreach (var game in cartGames)
                 {
-                     UserDatabaseManager.RemoveGameFromCart(username, game.ID);
+                    UserDatabaseManager.RemoveGameFromCart(username, game.ID);
                     UserDatabaseManager.AddGameToLibrary(username, game.ID);
+                    UserDatabaseManager.removeFromUserBalance(username, totalPrice);
+
+                    window.RefreshBalance(UserDatabaseManager.GetUserBalance(username).ToString());
                 }
 
                 LoadCart();

@@ -1,9 +1,4 @@
 ﻿using GamesShop.content.models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -61,10 +56,20 @@ namespace GamesShop.content.GUI.GUI_services
             UpdateButtonStates(null);
         }
 
-        public void ReturnToPreviousView()
+        public void ShowGameLibDetails(Game game)
+        {
+            navigationStack.Push(GetCurrentVisibleSection());
+            HideAllSections();
+            mainWindow.GameLibDetailsSection.Visibility = Visibility.Visible;
+            SetNavigationEnabled(false);
+            UpdateButtonStates(null);
+        }
+        public void ReturnToPreviousView(bool isGameDetails)
         {
             SetNavigationEnabled(true);
-            mainWindow.GameDetailsSection.Visibility = Visibility.Collapsed;
+            if (isGameDetails)
+                mainWindow.GameDetailsSection.Visibility = Visibility.Collapsed;
+            else mainWindow.GameLibDetailsSection.Visibility = Visibility.Collapsed;
 
             OnCartUpdated?.Invoke();
 
@@ -101,6 +106,7 @@ namespace GamesShop.content.GUI.GUI_services
             mainWindow.CartSection.Visibility = Visibility.Collapsed;
             mainWindow.ProfileSection.Visibility = Visibility.Collapsed;
             mainWindow.GameDetailsSection.Visibility = Visibility.Collapsed;
+            mainWindow.GameLibDetailsSection.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateButtonStates(Button activeButton)
@@ -143,7 +149,8 @@ namespace GamesShop.content.GUI.GUI_services
                 mainWindow.GamesSection,
                 mainWindow.LibrarySection,
                 mainWindow.CartSection,
-                mainWindow.ProfileSection
+                mainWindow.ProfileSection,
+                mainWindow.GameLibDetailsSection
             };
 
             return sections.FirstOrDefault(s => s.Visibility == Visibility.Visible) ?? mainWindow.GamesSection;

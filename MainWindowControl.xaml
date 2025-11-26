@@ -170,7 +170,6 @@
     </UserControl.Resources>
 
     <DockPanel Background="#1E1E1E">
-        <!-- Верхняя панель навигации -->
         <Grid DockPanel.Dock="Top" Background="#2D2D2D" Height="50">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -229,15 +228,28 @@
             </ScrollViewer>
 
             <!-- Секция Библиотеки -->
-            <StackPanel x:Name="LibrarySection" Visibility="Collapsed"
-                       Orientation="Vertical" HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" MaxWidth="400">
-                <TextBlock Text="Здесь ничего нет" Foreground="White" FontSize="24" 
-                          FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
-                <TextBlock Text="Но вы всё еще можете приобрести игру!" 
-                          Foreground="White" FontSize="16" TextWrapping="Wrap" 
-                          TextAlignment="Center"/>
-            </StackPanel>
+            <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" 
+                         VerticalScrollBarVisibility="Auto" Background="Transparent" 
+                         Padding="20">
+                <StackPanel Orientation="Vertical" Background="Transparent">
+                    <TextBlock x:Name="LibraryTitleText" Text="Библиотека" 
+                              Foreground="White" FontSize="24" FontWeight="Bold" 
+                              Margin="0,0,0,20"/>
+
+                    <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста" 
+                              Foreground="Gray" FontSize="16" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center" 
+                              Margin="0,50,0,0"/>
+
+                    <ItemsControl x:Name="LibraryItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
 
             <!-- Секция Корзины -->
             <ScrollViewer x:Name="CartSection" Visibility="Collapsed" 
@@ -286,6 +298,92 @@
                         HorizontalAlignment="Center" Cursor="Hand" 
                         Click="AddToBalance_Click"/>
             </StackPanel>
+
+            <!-- секция ишры в бибилотеке-->
+            <ScrollViewer x:Name="GameLibDetailsSection" Visibility="Collapsed" 
+                    VerticalScrollBarVisibility="Auto" Background="Transparent" 
+                    Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,30,0">
+                        <Border Background="#3C3C3C" Height="400" CornerRadius="8" Margin="0,0,0,20">
+                            <Image x:Name="GameLibDetailsImage" 
+                                Source="/content/Images/default_game.png" 
+                                Stretch="Uniform" 
+                                Height="400"/>
+                        </Border>
+
+                        <Button x:Name="LibBackButton" 
+                            Content="← Назад" 
+                            Click="BackFromLibButton_Click"
+                            Background="Transparent" Foreground="#108BEF"
+                            BorderBrush="#108BEF" BorderThickness="1"
+                            FontSize="12" FontWeight="Bold" 
+                            Height="30" Cursor="Hand"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <TextBlock x:Name="GameLibDetailsTitle" Text="Название игры" 
+                                Foreground="White" FontSize="28" 
+                                FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="GameLibDetailsRating" Text="★★★★★" 
+                                Foreground="Gold" FontSize="16" 
+                                VerticalAlignment="Center" Margin="15,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock x:Name="GameLibDetailsGenre" Text="Жанр" 
+                                Foreground="#B4B4B4" FontSize="14"
+                                FontStyle="Italic"/>
+                            <TextBlock Text=" • " Foreground="#B4B4B4" FontSize="14"/>
+                            <TextBlock x:Name="GameLibDetailsReleaseDate" Text="Дата выхода" 
+                                Foreground="#B4B4B4" FontSize="14"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="GameLibDetailsDescription" Text="Описание игры" 
+                            Foreground="White" FontSize="14" TextWrapping="Wrap"
+                            Margin="0,0,0,30" TextAlignment="Justify"/>
+
+                        <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
+                            <StackPanel>
+                                <TextBlock Text="Характеристики" Foreground="White" 
+                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <StackPanel x:Name="GameLibDetailsFeatures">
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
+                            <StackPanel>
+                                <TextBlock Text="Ключ активации" Foreground="White" 
+                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                                <TextBlock Name="ActivationKey" Foreground="White" 
+                                    FontSize="16" Margin="0,0,0,10"/>
+
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
+                            <StackPanel>
+                                <TextBlock Text="Статистика по игре" Foreground="White" 
+                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                                <TextBlock Name="GameStatistics" Foreground="White" 
+                                    FontSize="16" Margin="0,0,0,10"/>
+
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
 
             <!-- Секция страницы игры -->
             <ScrollViewer x:Name="GameDetailsSection" Visibility="Collapsed" 

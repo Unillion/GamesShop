@@ -33,6 +33,8 @@ namespace GamesShop
         private GameService gameService;
         private CartService cartService;
         private GameDetailsService gameDetailsService;
+        private LibraryService libraryService;
+        private GameLibraryDetailsService gameLibraryDetailsService;
 
         public MainWindowControl(string username)
         {
@@ -42,8 +44,10 @@ namespace GamesShop
 
             navigationService = new NavigationService(this);
             gameService = new GameService(username, userID);
-            cartService = new CartService(username);
+            cartService = new CartService(username, this);
             gameDetailsService = new GameDetailsService(username, userID);
+            libraryService = new LibraryService(username);
+            gameLibraryDetailsService = new GameLibraryDetailsService(username, userID);
 
             InitializeGameDetailsService();
             InitializeEventHandlers();
@@ -72,6 +76,9 @@ namespace GamesShop
             gameService.OnCartUpdated = OnCartUpdated;
             navigationService.OnCartUpdated = OnCartUpdated;
             cartService.OnCartUpdated = OnCartUpdated;
+
+            libraryService.OnCartUpdated = OnCartUpdated;
+            libraryService.OnGameCardClick = ShowGameLibDetails;
         }
 
         private void InitializeGameDetailsService()
@@ -87,6 +94,16 @@ namespace GamesShop
             gameDetailsService.GameDetailsReviewsList = GameDetailsReviewsList;
             gameDetailsService.GameDetailsReviewsCount = GameDetailsReviewsCount;
             gameDetailsService.AddToCartDetailsButton = AddToCartDetailsButton;
+
+            gameLibraryDetailsService.GameDetailsTitle = GameLibDetailsTitle;
+            gameLibraryDetailsService.GameDetailsGenre = GameLibDetailsGenre;
+            gameLibraryDetailsService.GameDetailsDescription = GameLibDetailsDescription;
+            gameLibraryDetailsService.GameDetailsImage = GameLibDetailsImage;
+            gameLibraryDetailsService.GameDetailsFeatures = GameLibDetailsFeatures;
+            gameLibraryDetailsService.GameDetailsReleaseDate = GameLibDetailsReleaseDate;
+            gameLibraryDetailsService.GameLibraryAcivationKey = ActivationKey;
+            gameLibraryDetailsService.GameDetailsStatistics = GameStatistics;
+
         }
 
         private void OnUserBalanceChanged(string username, decimal newBalance)
@@ -119,7 +136,7 @@ namespace GamesShop
         private void CheckoutButton_Click(object sender, RoutedEventArgs e)
         {
             cartService.Checkout();
-            ShowCartSection(); 
+            ShowCartSection();
         }
 
         private void ShowGamesSection()
@@ -131,6 +148,7 @@ namespace GamesShop
         private void ShowLibrarySection()
         {
             navigationService.ShowLibrarySection();
+            libraryService.RenderLibrary(LibraryItemsControl, LibraryEmptytext);
         }
 
         private void ShowCartSection()
@@ -146,7 +164,7 @@ namespace GamesShop
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            navigationService.ReturnToPreviousView();
+            navigationService.ReturnToPreviousView(true);
         }
 
         private void AddToCartDetailsButton_Click(object sender, RoutedEventArgs e)
@@ -164,6 +182,13 @@ namespace GamesShop
             currentGame = game;
             navigationService.ShowGameDetails(game);
             gameDetailsService.LoadGameDetails(game);
+        }
+
+        public void ShowGameLibDetails(Game game)
+        {
+            currentGame = game;
+            navigationService.ShowGameLibDetails(game);
+            gameLibraryDetailsService.LoadGameDetails(game);
         }
 
         public void RefreshGames()
@@ -206,6 +231,11 @@ namespace GamesShop
             };
 
             dialog.ShowDialog();
+        }
+
+        private void BackFromLibButton_Click(object sender, RoutedEventArgs e)
+        {
+            navigationService.ReturnToPreviousView(false);
         }
     }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GamesShop.content.db;
+using GamesShop.content.utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using GamesShop.content.db;
 
 namespace GamesShop
 {
@@ -30,7 +31,7 @@ namespace GamesShop
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Введите имя пользователя и пароль.");
+                DialogueHelper.ShowMessage("Ошибка", "Введите имя пользователя");
                 return;
             }
 
@@ -38,14 +39,14 @@ namespace GamesShop
 
             if (isValid)
             {
-                MessageBox.Show("Вход выполнен успешно!");
+                DialogueHelper.ShowMessage("Успех", "Вход успешно выполнен!");
                 Main mainWindow = new Main(username);
                 mainWindow.Show();
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Неправильное имя пользователя или пароль.");
+                DialogueHelper.ShowMessage("Ошибка", "Неправильное имя пользователя или пароль!");
             }
         }
 

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using GamesShop.content.db;
 using GamesShop.content.models;
+using GamesShop.content.utilities;
 
 namespace GamesShop
 {
@@ -29,6 +30,14 @@ namespace GamesShop
                                     EmailTextBox.Text.Trim(),
                                     PasswordBox.Password);
 
+            var isUserExist = UserDatabaseManager.isUserExist(newUser.Username);
+            if (isUserExist)
+            {
+                DialogueHelper.ShowMessage("Ошибка", "Такое имя пользователя уже существует!");
+                return;
+            }
+
+
             bool success = UserDatabaseManager.AddUser(newUser);
 
             if (success)
@@ -38,14 +47,14 @@ namespace GamesShop
                 PasswordBox.Password = string.Empty;
                 ConfirmPasswordBox.Password = string.Empty;
 
-                MessageBox.Show("Регистрация прошла успешно. Войдите в систему");
+                DialogueHelper.ShowMessage("Успех", "Регистрация прошла успешно. Войдите в систему");
                 LoginMenu loginMenu = new LoginMenu();
                 loginMenu.Show();
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Ошибка при регистрации. Попробуйте снова.");
+                DialogueHelper.ShowMessage("Ошибка", "Ошибка при регистрации, попробуйте снова");
             }
         }
 
@@ -82,13 +91,14 @@ namespace GamesShop
             {
                 return false;
             }
-            
+
 
             if (password != confirmPassword)
             {
                 PasswordError.Visibility = Visibility.Visible;
                 return false;
-            }else PasswordError.Visibility = Visibility.Hidden;
+            }
+            else PasswordError.Visibility = Visibility.Hidden;
 
             return true;
         }

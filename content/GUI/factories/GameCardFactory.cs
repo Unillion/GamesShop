@@ -15,7 +15,7 @@ namespace GamesShop.content.GUI.factories
 {
     public class GameCardFactory
     {
-        public static FrameworkElement CreateGameCard(Game game, bool isCartItem, string username,
+        public static FrameworkElement CreateGameCard(Game game, bool isCartItem, bool isLibraryItem, string username,
             Action<Game> onGameClick, Action<int> onCartAction)
         {
             var border = new Border
@@ -24,8 +24,8 @@ namespace GamesShop.content.GUI.factories
                 BorderBrush = new SolidColorBrush(Color.FromRgb(80, 80, 80)),
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(8),
-                Width = isCartItem ? 250 : 280,
-                Height = isCartItem ? 320 : 400,
+                Width = isCartItem | isLibraryItem ? 250 : 280,
+                Height = isCartItem | isLibraryItem ? 300 : 400,
                 Margin = new Thickness(10),
                 Padding = new Thickness(15),
                 Cursor = Cursors.Hand
@@ -42,8 +42,8 @@ namespace GamesShop.content.GUI.factories
                 AddDescription(stackPanel, game);
             }
 
-            AddPrice(stackPanel, game, isCartItem);
-            AddActionButton(stackPanel, game, isCartItem, username, onCartAction);
+            AddPrice(stackPanel, game, isCartItem, isLibraryItem);
+            AddActionButton(stackPanel, game, isCartItem, isLibraryItem, username, onCartAction);
 
             AddEventHandlers(border, game, isCartItem, username, onGameClick);
 
@@ -121,8 +121,9 @@ namespace GamesShop.content.GUI.factories
             stackPanel.Children.Add(descriptionText);
         }
 
-        private static void AddPrice(StackPanel stackPanel, Game game, bool isCartItem)
+        private static void AddPrice(StackPanel stackPanel, Game game, bool isCartItem, bool isLibItem)
         {
+            if (isLibItem) return;
             var priceText = new TextBlock
             {
                 Text = $"{game.Price:F2} $",
@@ -134,10 +135,19 @@ namespace GamesShop.content.GUI.factories
             stackPanel.Children.Add(priceText);
         }
 
-        private static void AddActionButton(StackPanel stackPanel, Game game, bool isCartItem,
+        private static void AddActionButton(StackPanel stackPanel, Game game, bool isCartItem, bool isLibItem,
             string username, Action<int> onCartAction)
         {
-            if (!isCartItem)
+            if (isLibItem) return;
+
+            bool isGamePurchased = UserDatabaseManager.IsGamePurchased(username, game.ID);
+
+            if (isGamePurchased)
+            {
+                var purchasedLabel = CreatePurchasedLabel();
+                stackPanel.Children.Add(purchasedLabel);
+            }
+            else if (!isCartItem)
             {
                 bool isInCart = UserDatabaseManager.IsGameInCart(username, game.ID);
                 var cartButton = CreateCartButton(game.ID, isInCart, onCartAction);
@@ -148,6 +158,20 @@ namespace GamesShop.content.GUI.factories
                 var removeButton = CreateRemoveButton(game.ID, onCartAction);
                 stackPanel.Children.Add(removeButton);
             }
+        }
+
+        private static TextBlock CreatePurchasedLabel()
+        {
+            return new TextBlock
+            {
+                Text = "Куплено",
+                Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100)),
+                FontSize = 12,
+                FontWeight = FontWeights.Bold,
+                Margin = new Thickness(0, 5, 0, 0),
+                Padding = new Thickness(10, 5, 10, 5),
+                Background = new SolidColorBrush(Color.FromRgb(60, 100, 60)),
+            };
         }
 
         private static Button CreateCartButton(int gameId, bool isInCart, Action<int> onCartAction)
@@ -163,6 +187,8 @@ namespace GamesShop.content.GUI.factories
                     Foreground = new SolidColorBrush(Color.FromRgb(200, 200, 200)),
                     BorderThickness = new Thickness(0),
                     FontSize = 12,
+                    Margin = new Thickness(0, 5, 0, 0),
+                    Padding = new Thickness(10, 5, 10, 5),
                     FontWeight = FontWeights.Bold,
                     Cursor = Cursors.Arrow,
                     IsEnabled = false,
@@ -178,6 +204,8 @@ namespace GamesShop.content.GUI.factories
                     Foreground = Brushes.White,
                     BorderThickness = new Thickness(0),
                     FontSize = 12,
+                    Margin = new Thickness(0, 5, 0, 0),
+                    Padding = new Thickness(10, 5, 10, 5),
                     FontWeight = FontWeights.Bold,
                     Cursor = Cursors.Hand,
                     Tag = gameId
@@ -213,6 +241,8 @@ namespace GamesShop.content.GUI.factories
                 Foreground = Brushes.White,
                 BorderThickness = new Thickness(0),
                 FontSize = 11,
+                Margin = new Thickness(0, 5, 0, 0),
+                Padding = new Thickness(10, 5, 10, 5),
                 FontWeight = FontWeights.Bold,
                 Cursor = Cursors.Hand,
                 Tag = gameId

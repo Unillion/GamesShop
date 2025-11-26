@@ -1,11 +1,6 @@
 ﻿using GamesShop.content.db;
 using GamesShop.content.GUI.factories;
 using GamesShop.content.models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -42,7 +37,7 @@ namespace GamesShop.content.GUI.GUI_services
             {
                 var gameCard = GameCardFactory.CreateGameCard(
                     game,
-                    false,
+                    false, false,
                     username,
                     OnGameCardClick,
                     OnAddToCart

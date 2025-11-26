@@ -28,11 +28,13 @@ namespace GamesShop.dialogueUserControls
         private void YesButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult?.Invoke(true);
+            this.Close();
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult?.Invoke(false);
+            this.Close();
         }
     }
 }
