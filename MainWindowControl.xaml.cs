@@ -260,6 +260,8 @@ namespace GamesShop
             GameStatisticsPanelText.Text = statsText;
             GameStatisticsPanelText.Foreground = Brushes.White;
             GameStatisticsPanelText.FontStyle = FontStyles.Normal;
+
+            UpdateActivationKey.Tag = gameID;
         }
 
         private void createRandomKey()
@@ -270,6 +272,10 @@ namespace GamesShop
         private void UpdateActivationKey_Click(object sender, RoutedEventArgs e)
         {
             createRandomKey();
+
+            int gameID = Convert.ToInt32(UpdateActivationKey.Tag);
+            GameDatabseManager.IncrementKeyRefreshes(gameID);
+            LoadGameStatistics(gameID);
         }
 
         private void CopyActivationKey_Click(object sender, RoutedEventArgs e)

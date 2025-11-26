@@ -114,6 +114,8 @@ namespace GamesShop.content.GUI.GUI_services
                     UserDatabaseManager.AddGameToLibrary(username, game.ID);
                     UserDatabaseManager.removeFromUserBalance(username, totalPrice);
 
+                    GameDatabseManager.IncrementPurchaseCount(game.ID);
+
                     window.RefreshBalance(UserDatabaseManager.GetUserBalance(username).ToString());
                 }
 
