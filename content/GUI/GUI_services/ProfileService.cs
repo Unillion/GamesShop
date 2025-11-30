@@ -22,6 +22,8 @@ namespace GamesShop.content.GUI.GUI_services
         public TextBlock TotalSpentAmount { get; set; }
         public TextBlock TotalIncomeAmount { get; set; }
         public TextBlock ReviewsWrittenCount { get; set; }
+        public TextBlock NameChanges { get; set; }
+        public TextBlock PasswordChanges { get; set; }
 
         public ProfileService(string username, int userId)
         {
@@ -41,6 +43,8 @@ namespace GamesShop.content.GUI.GUI_services
             TotalSpentAmount.Text = statistics.TotalMoneySpent.ToString() + "₽";
             TotalIncomeAmount.Text = statistics.TotalIncomeAmount.ToString() + "₽";
             ReviewsWrittenCount.Text = statistics.ReviewsWritten.ToString();
+            NameChanges.Text = statistics.NameChanges.ToString();
+            PasswordChanges.Text = statistics.PasswordChanges.ToString();
         }
 
     }

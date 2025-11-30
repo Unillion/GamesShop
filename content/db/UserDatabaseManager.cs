@@ -289,7 +289,7 @@ namespace GamesShop.content.db
             }
         }
 
-        public static bool UpdateMultipleStats(int userId, decimal moneySpent = 0, int gamesPurchased = 0, int reviewsWritten = 0, decimal income = 0)
+        public static bool UpdateMultipleStats(int userId, decimal moneySpent = 0, int gamesPurchased = 0, int reviewsWritten = 0, decimal income = 0, int nameChanges = 0, int passwordChanges = 0)
         {
             using var context = new GameShopContext();
             var stats = context.UserStatistics.FirstOrDefault(us => us.UserID == userId);
@@ -299,6 +299,8 @@ namespace GamesShop.content.db
             if (gamesPurchased > 0) stats.TotalGamesPurchased += gamesPurchased;
             if (reviewsWritten > 0) stats.ReviewsWritten += reviewsWritten;
             if (income > 0) stats.TotalIncomeAmount += income;
+            if (nameChanges > 0) stats.NameChanges += nameChanges;
+            if (passwordChanges > 0) stats.PasswordChanges += passwordChanges;
 
             return context.SaveChanges() > 0;
         }

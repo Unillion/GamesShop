@@ -31,5 +31,10 @@ namespace GamesShop.content.models
 
         [Column("ReviewsWritten")]
         public int ReviewsWritten { get; set; } = 0;
+
+        [Column("NameChanges")]
+        public int NameChanges { get; set; } = 0;
+        [Column("PasswordChanges")]
+        public int PasswordChanges { get; set; } = 0;
     }
 }

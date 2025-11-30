@@ -35,5 +35,28 @@ namespace GamesShop.content.utilities
 
             return username;
         }
+
+        public static string changePassword(int currentUserId, string password)
+        {
+            var dialog = new InputDialog(
+                title: "Смена пароля пользователя",
+                prompt: "Введите новый пароль:",
+                defaultValue: "",
+                validationFunc: newPassword =>
+                    !string.IsNullOrWhiteSpace(newPassword) &&
+                    newPassword.Length >= 6
+            );
+
+            if (dialog.ShowDialog() == true)
+            {
+                string newPassword = dialog.InputText;
+                bool success = UserDatabaseManager.UpdateUser(currentUserId, newPassword: newPassword);
+
+                if (success) DialogueHelper.ShowMessage("Успех", "Пароль успешно изменён!");
+                return newPassword;
+            }
+
+            return password;
+        }
     }
 }

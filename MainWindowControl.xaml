@@ -422,7 +422,7 @@
                                 <StackPanel Margin="0,20,0,0">
                                     <Button x:Name="EditNameButton" Content="📝 Сменить Имя" Click="ChangeName_Click"
                                Style="{StaticResource ProfileActionButtonStyle}"/>
-                                    <Button x:Name="ChangePasswordButton" Content="🔐 Сменить пароль" 
+                                    <Button x:Name="ChangePasswordButton" Content="🔐 Сменить пароль" Click="ChangePassword_Click"
                                Style="{StaticResource ProfileActionButtonStyle}"/>
                                     <Button x:Name="PurchaseHistoryButton" Content="📋 История покупок" 
                                Style="{StaticResource ProfileActionButtonStyle}"/>
@@ -473,6 +473,24 @@
                                         <StackPanel>
                                             <TextBlock Text="Написано отзывов" Style="{StaticResource StatLabelStyle}"/>
                                             <TextBlock x:Name="ReviewsWrittenCount" Text="0" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="↻" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Изменений имени" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="NameChangesCount" Text="0" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="↺" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Изменений пароля" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="PasswordChangesCount" Text="0" Style="{StaticResource StatValueStyle}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>

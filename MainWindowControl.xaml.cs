@@ -132,6 +132,8 @@ namespace GamesShop
             profileService.ReviewsWrittenCount = ReviewsWrittenCount;
             profileService.TotalSpentAmount = TotalSpentAmount;
             profileService.TotalIncomeAmount = TotalIncomeAmount;
+            profileService.NameChanges = NameChangesCount;
+            profileService.PasswordChanges = PasswordChangesCount;
         }
 
         private void OnUserBalanceChanged(string username, decimal newBalance)
@@ -321,6 +323,7 @@ namespace GamesShop
             if (!string.IsNullOrEmpty(newUsername))
             {
                 username = newUsername;
+                UserDatabaseManager.UpdateMultipleStats(userID, nameChanges: 1);
 
                 UpdateServicesUsername(newUsername);
 
@@ -342,6 +345,20 @@ namespace GamesShop
                 loginWindow.Show();
 
                 currentWindow?.Close();
+            }
+        }
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            var newPassword = UserManager.changePassword(userID, username);
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                UserDatabaseManager.UpdateUser(userID, newPassword: newPassword);
+                UserDatabaseManager.UpdateMultipleStats(userID, passwordChanges: 1);
+
+                UpdateServicesUsername(newPassword);
+
+                profileService.LoadProfileInformation();
+                RefreshUIWithNewUsername(newPassword);
             }
         }
     }
