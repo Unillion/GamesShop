@@ -3,6 +3,7 @@ using GamesShop.content.GUI.GUI_services;
 using GamesShop.content.models;
 using GamesShop.content.utilities;
 using GamesShop.dialogueUserControls;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
 using System.Windows.Shapes;
 using static Azure.Core.HttpHeader;
 
@@ -35,6 +35,7 @@ namespace GamesShop
         private GameDetailsService gameDetailsService;
         private LibraryService libraryService;
         private GameLibraryDetailsService gameLibraryDetailsService;
+        private ProfileService profileService;
 
         public MainWindowControl(string username)
         {
@@ -43,15 +44,10 @@ namespace GamesShop
             this.userID = UserDatabaseManager.GetUserId(username);
 
             navigationService = new NavigationService(this);
-            gameService = new GameService(username, userID);
-            cartService = new CartService(username, this);
-            gameDetailsService = new GameDetailsService(username, userID);
-            libraryService = new LibraryService(username);
-            gameLibraryDetailsService = new GameLibraryDetailsService(username, userID);
 
-            InitializeGameDetailsService();
-            InitializeEventHandlers();
+            UpdateServicesUsername(username);
             InitializeData();
+            RefreshUIWithNewUsername(username);
             ShowGamesSection();
 
             BalanceManager.UserBalanceChanged += OnUserBalanceChanged;
@@ -63,9 +59,33 @@ namespace GamesShop
             UserBalanceText.Text = UserDatabaseManager.GetUserBalance(username).ToString() + "₽";
             cartGames = UserDatabaseManager.GetUserCart(username);
 
-            WelcomeText.Text = $"Добро пожаловать, {username}!";
-            CartTitleText.Text = $"Корзина пользователя {username}";
             ProfileUsernameText.Text = username;
+        }
+
+        private void RefreshUIWithNewUsername(string newUsername)
+        {
+            WelcomeText.Text = $"Добро пожаловать, {newUsername}!";
+            CartTitleText.Text = $"Корзина пользователя {newUsername}";
+
+            InitializeData();
+
+            if (ProfileSection.Visibility == Visibility.Visible)
+            {
+                ShowProfileSection();
+            }
+        }
+
+        private void UpdateServicesUsername(string newUsername)
+        {
+            gameService = new GameService(newUsername, userID);
+            cartService = new CartService(newUsername, this);
+            gameDetailsService = new GameDetailsService(newUsername, userID);
+            libraryService = new LibraryService(newUsername);
+            gameLibraryDetailsService = new GameLibraryDetailsService(newUsername, userID);
+            profileService = new ProfileService(newUsername, userID);
+
+            InitializeEventHandlers();
+            InitializeGameDetailsService();
         }
 
         private void InitializeEventHandlers()
@@ -104,6 +124,14 @@ namespace GamesShop
             gameLibraryDetailsService.GameLibraryAcivationKey = ActivationKey;
             gameLibraryDetailsService.GameDetailsStatistics = GameStatisticsPanelText;
 
+            profileService.ProfileUsernameText = ProfileUsernameText;
+            profileService.ProfileBalanceText = ProfileBalanceText;
+            profileService.ProfileRegistrationDate = ProfileRegistrationDate;
+            profileService.GamesInLibraryCount = GamesInLibraryCount;
+            profileService.ProfileEmailText = ProfileEmailText;
+            profileService.ReviewsWrittenCount = ReviewsWrittenCount;
+            profileService.TotalSpentAmount = TotalSpentAmount;
+            profileService.TotalIncomeAmount = TotalIncomeAmount;
         }
 
         private void OnUserBalanceChanged(string username, decimal newBalance)
@@ -113,6 +141,7 @@ namespace GamesShop
                 RefreshBalance(newBalance.ToString("F2"));
             }
         }
+
         private void GamesButton_Click(object sender, RoutedEventArgs e)
         {
             ShowGamesSection();
@@ -160,6 +189,7 @@ namespace GamesShop
         private void ShowProfileSection()
         {
             navigationService.ShowProfileSection();
+            profileService.LoadProfileInformation();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -230,6 +260,8 @@ namespace GamesShop
             dialog.BalanceAdded += (amount) =>
             {
                 BalanceManager.UpdateBalance(username, amount);
+                UserDatabaseManager.UpdateMultipleStats(userID, income: amount);
+                profileService.LoadProfileInformation();
             };
 
             dialog.ShowDialog();
@@ -282,6 +314,35 @@ namespace GamesShop
         {
             Clipboard.SetText(ActivationKey.Text);
         }
-    }
 
+        private void ChangeName_Click(object sender, RoutedEventArgs e)
+        {
+            var newUsername = UserManager.changeUsername(userID, username);
+            if (!string.IsNullOrEmpty(newUsername))
+            {
+                username = newUsername;
+
+                UpdateServicesUsername(newUsername);
+
+                profileService.LoadProfileInformation();
+                RefreshUIWithNewUsername(newUsername);
+            }
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            bool result = false;
+            DialogueHelper.ShowConfirmation("Выйти?", "Вы уверены что хотите выйти?", a => result = a);
+
+            if (result)
+            {
+                Window currentWindow = Window.GetWindow(this);
+
+                LoginMenu loginWindow = new LoginMenu();
+                loginWindow.Show();
+
+                currentWindow?.Close();
+            }
+        }
+    }
 }

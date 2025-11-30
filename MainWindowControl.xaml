@@ -7,7 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <!-- Стили для кнопок навигации -->
         <Style TargetType="Button" x:Key="MenuButton">
             <Setter Property="Height" Value="50"/>
             <Setter Property="Margin" Value="10,0"/>
@@ -167,6 +166,71 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <!-- Стили для профиля -->
+        <Style x:Key="ProfileCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="30"/>
+        </Style>
+
+        <Style x:Key="ProfileTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <Style x:Key="ProfileSubtitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B4B4B4"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+        </Style>
+
+        <Style x:Key="StatItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="StatIconStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+
+        <Style x:Key="StatLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B4B4B4"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="StatValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="BalanceValueStyle" TargetType="TextBlock" BasedOn="{StaticResource StatValueStyle}">
+            <Setter Property="Foreground" Value="#108BEF"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <Style x:Key="ProfileActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
     </UserControl.Resources>
 
     <DockPanel Background="#1E1E1E">
@@ -285,19 +349,148 @@
             </ScrollViewer>
 
             <!-- Секция Профиля -->
-            <StackPanel x:Name="ProfileSection" Visibility="Collapsed" 
-                       Orientation="Vertical" HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" MaxWidth="400">
-                <TextBlock Text="Профиль пользователя" Foreground="White" FontSize="24" 
-                          FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
-                <TextBlock x:Name="ProfileUsernameText" Text="Имя пользователя" 
-                          Foreground="White" FontSize="16" HorizontalAlignment="Center"/>
-                <Button x:Name="ToBalance" Content="Пополнить Баланс" 
-                        Background="#108BEF" Foreground="White" FontSize="16" 
-                        FontWeight="Bold" Margin="0,20,0,0" 
-                        HorizontalAlignment="Center" Cursor="Hand" 
-                        Click="AddToBalance_Click"/>
-            </StackPanel>
+            <Grid x:Name="ProfileSection" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Заголовок -->
+                <TextBlock Grid.Row="0" 
+               Text="Профиль Пользователя" 
+               Foreground="White" 
+               FontSize="32" 
+               FontWeight="Bold" 
+               HorizontalAlignment="Center" 
+               Margin="0,20,0,30"/>
+
+                <!-- Основной контент -->
+                <Grid Grid.Row="1" Margin="40,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="400"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Левая часть - информация о пользователе -->
+                    <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                        <!-- Основная информация -->
+                        <Border Style="{StaticResource ProfileCardStyle}">
+                            <StackPanel>
+                                <!-- Аватар и имя -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <Border Width="100" Height="100" 
+                               Background="#3C3C3C" CornerRadius="50" 
+                               Margin="0,0,20,0">
+                                        <TextBlock Text="👤" FontSize="40" 
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock x:Name="ProfileUsernameText" Text="Имя пользователя" 
+                                      Style="{StaticResource ProfileTitleStyle}"/>
+                                        <TextBlock x:Name="ProfileEmailText" Text="user@example.com" 
+                                      Style="{StaticResource ProfileSubtitleStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <Border Style="{StaticResource StatCardStyle}" Margin="0,0,15,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Баланс" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="ProfileBalanceText" Text="0.00 $" 
+                                          Style="{StaticResource BalanceValueStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Style="{StaticResource StatCardStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="Дата регистрации" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="ProfileRegistrationDate" Text="01.01.2024" 
+                                          Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Функциональные кнопки -->
+                        <Border Style="{StaticResource ProfileCardStyle}" Margin="0,25,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление профилем" Style="{StaticResource SectionTitleStyle}"/>
+
+                                <StackPanel Margin="0,20,0,0">
+                                    <Button x:Name="EditNameButton" Content="📝 Сменить Имя" Click="ChangeName_Click"
+                               Style="{StaticResource ProfileActionButtonStyle}"/>
+                                    <Button x:Name="ChangePasswordButton" Content="🔐 Сменить пароль" 
+                               Style="{StaticResource ProfileActionButtonStyle}"/>
+                                    <Button x:Name="PurchaseHistoryButton" Content="📋 История покупок" 
+                               Style="{StaticResource ProfileActionButtonStyle}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Правая часть - статистика -->
+                    <Border Grid.Column="1" Style="{StaticResource ProfileCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="📊 Статистика" Style="{StaticResource SectionTitleStyle}"/>
+
+                            <StackPanel Margin="0,20,0,0">
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🎮" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Игр в библиотеке" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="GamesInLibraryCount" Text="0" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="💰" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Всего потрачено" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="TotalSpentAmount" Text="0.00 ₽" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="💰" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Всего пополнено" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="TotalIncomeAmount" Text="0.00 ₽" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource StatItemStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📝" Style="{StaticResource StatIconStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Написано отзывов" Style="{StaticResource StatLabelStyle}"/>
+                                            <TextBlock x:Name="ReviewsWrittenCount" Text="0" Style="{StaticResource StatValueStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Нижняя панель -->
+                <Border Grid.Row="2" Style="{StaticResource ProfileCardStyle}" Margin="40,20">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="AddBalanceButton" Content="💳 Пополнить баланс" Click="AddToBalance_Click"
+                   Style="{StaticResource DialogButtonStyle}" Margin="0,0,15,0" Width="200"/>
+                        <Button x:Name="LogoutButton" Content="🚪 Выйти" Click="Logout_Click"
+                   Style="{StaticResource SecondaryButtonStyle}" Width="150"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
 
             <!-- секция игры в библиотеке-->
             <ScrollViewer x:Name="GameLibDetailsSection" Visibility="Collapsed" 
@@ -333,9 +526,6 @@
                             <TextBlock x:Name="GameLibDetailsTitle" Text="Название игры" 
                                 Foreground="White" FontSize="28" 
                                 FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="GameLibDetailsRating" Text="★★★★★" 
-                                Foreground="Gold" FontSize="16" 
-                                VerticalAlignment="Center" Margin="15,0,0,0"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">

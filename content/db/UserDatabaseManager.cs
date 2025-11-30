@@ -255,5 +255,63 @@ namespace GamesShop.content.db
                     .Any(r => r.User.Username == username && r.GameID == gameId);
             }
         }
+
+        public static User GetUserById(int userId, bool includeRelated = false)
+        {
+            using (var context = new GameShopContext())
+            {
+                var query = context.Users.AsQueryable();
+
+                if (includeRelated)
+                {
+                    query = query
+                        .Include(u => u.Cart)
+                            .ThenInclude(c => c.CartItems)
+                        .Include(u => u.Library)
+                            .ThenInclude(l => l.LibraryItems)
+                        .Include(u => u.Statistics)
+                        .Include(u => u.Reviews);
+                }
+
+                return query
+                    .AsNoTracking()
+                    .FirstOrDefault(u => u.ID == userId);
+            }
+        }
+
+        public static UserStatistics GetUserStatistics(int userId)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.UserStatistics
+                    .AsNoTracking()
+                    .FirstOrDefault(us => us.UserID == userId);
+            }
+        }
+
+        public static bool UpdateMultipleStats(int userId, decimal moneySpent = 0, int gamesPurchased = 0, int reviewsWritten = 0, decimal income = 0)
+        {
+            using var context = new GameShopContext();
+            var stats = context.UserStatistics.FirstOrDefault(us => us.UserID == userId);
+            if (stats == null) return false;
+
+            if (moneySpent > 0) stats.TotalMoneySpent += moneySpent;
+            if (gamesPurchased > 0) stats.TotalGamesPurchased += gamesPurchased;
+            if (reviewsWritten > 0) stats.ReviewsWritten += reviewsWritten;
+            if (income > 0) stats.TotalIncomeAmount += income;
+
+            return context.SaveChanges() > 0;
+        }
+
+        public static bool UpdateUser(int userId, string newUsername = null, string newPassword = null)
+        {
+            using var context = new GameShopContext();
+            var user = context.Users.FirstOrDefault(u => u.ID == userId);
+            if (user == null) return false;
+
+            if (!string.IsNullOrWhiteSpace(newUsername)) user.Username = newUsername;
+            if (!string.IsNullOrWhiteSpace(newPassword)) user.PasswordHash = HashPassword(newPassword);
+            return context.SaveChanges() > 0;
+        }
     }
 }

@@ -17,6 +17,7 @@ public class GameShopContext : DbContext
     public DbSet<Genre> Genres { get; set; }
     public DbSet<GameGenres> GameGenres { get; set; }
     public DbSet<GameStatistics> GameStatistics { get; set; }
+    public DbSet<UserStatistics> UserStatistics { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -40,6 +41,7 @@ public class GameShopContext : DbContext
         modelBuilder.Entity<Genre>().ToTable("Genres");
         modelBuilder.Entity<GameGenres>().ToTable("GameGenres");
         modelBuilder.Entity<GameStatistics>().ToTable("GameStatistics");
+        modelBuilder.Entity<UserStatistics>().ToTable("UserStatistics");
 
         modelBuilder.Entity<Game>()
             .HasOne(g => g.GameStatistics)
@@ -128,5 +130,10 @@ public class GameShopContext : DbContext
         modelBuilder.Entity<GameGenres>()
             .HasIndex(gg => new { gg.GameID, gg.GenreID })
             .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Statistics)
+            .WithOne(us => us.User)
+            .HasForeignKey<UserStatistics>(us => us.UserID);
     }
 }

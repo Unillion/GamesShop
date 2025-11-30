@@ -116,6 +116,8 @@ namespace GamesShop.content.GUI.GUI_services
 
                     GameDatabseManager.IncrementPurchaseCount(game.ID);
 
+                    UserDatabaseManager.UpdateMultipleStats(UserDatabaseManager.GetUserId(username), moneySpent: totalPrice, gamesPurchased: 1);
+
                     window.RefreshBalance(UserDatabaseManager.GetUserBalance(username).ToString());
                 }
 

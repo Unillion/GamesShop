@@ -297,6 +297,7 @@ namespace GamesShop.content.GUI.GUI_services
                         };
 
                         bool success = GameDatabseManager.AddReview(newReview);
+                        UserDatabaseManager.UpdateMultipleStats(userId, reviewsWritten: 1);
 
                         if (success)
                         {

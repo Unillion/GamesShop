@@ -21,6 +21,9 @@ namespace GamesShop.content.models
         [Column("Email")]
         public string Email { get; set; }
 
+        [Column("RegistrationDate")]
+        public DateTime RegistrarionDate { get; set; }
+
         [NotMapped]
         public string Password { get; set; }
 
@@ -32,6 +35,7 @@ namespace GamesShop.content.models
 
         public virtual Cart Cart { get; set; }
         public virtual Library Library { get; set; }
+        public virtual UserStatistics Statistics { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
 
         public User() { Reviews = new HashSet<Review>(); }
