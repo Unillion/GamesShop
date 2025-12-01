@@ -275,7 +275,7 @@
         <!-- Область контента -->
         <Grid x:Name="MainContentArea">
             <!-- Секция Игр -->
-            <ScrollViewer x:Name="GamesSection" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="GamesSection" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical" Background="Transparent" Margin="20">
                     <TextBlock x:Name="WelcomeText" Text="Добро пожаловать!" 
                               Foreground="White" FontSize="24" FontWeight="Bold" 

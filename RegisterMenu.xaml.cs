@@ -28,7 +28,7 @@ namespace GamesShop
 
             User newUser = new User(UsernameTextBox.Text.Trim(),
                                     EmailTextBox.Text.Trim(),
-                                    PasswordBox.Password);
+                                    PasswordBox.Password, DateTime.Now);
 
             var isUserExist = UserDatabaseManager.isUserExist(newUser.Username);
             if (isUserExist)

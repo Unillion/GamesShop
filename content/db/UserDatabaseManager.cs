@@ -32,6 +32,9 @@ namespace GamesShop.content.db
                         var library = new Library { UserID = user.ID };
                         context.Libraries.Add(library);
 
+                        var UserStatitics = new UserStatistics { UserID = user.ID };
+                        context.UserStatistics.Add(UserStatitics);
+
                         context.SaveChanges();
                         transaction.Commit();
                         return true;
@@ -43,20 +46,6 @@ namespace GamesShop.content.db
                         return false;
                     }
                 }
-            }
-        }
-
-        private static void CreateUserRelatedEntities(int userId)
-        {
-            using (var context = new GameShopContext())
-            {
-                var cart = new Cart { UserID = userId };
-                context.Carts.Add(cart);
-
-                var library = new Library { UserID = userId };
-                context.Libraries.Add(library);
-
-                context.SaveChanges();
             }
         }
 

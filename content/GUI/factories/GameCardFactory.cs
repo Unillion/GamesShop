@@ -126,7 +126,7 @@ namespace GamesShop.content.GUI.factories
             if (isLibItem) return;
             var priceText = new TextBlock
             {
-                Text = $"{game.Price:F2} $",
+                Text = $"{game.Price:F2} ",
                 Foreground = new SolidColorBrush(Color.FromRgb(16, 139, 239)),
                 FontSize = isCartItem ? 14 : 16,
                 FontWeight = FontWeights.Bold,

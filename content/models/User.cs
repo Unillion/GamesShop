@@ -31,7 +31,7 @@ namespace GamesShop.content.models
         public string PasswordHash { get; set; }
 
         [Column("Balance")]
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
 
         public virtual Cart Cart { get; set; }
         public virtual Library Library { get; set; }
@@ -40,11 +40,12 @@ namespace GamesShop.content.models
 
         public User() { Reviews = new HashSet<Review>(); }
 
-        public User(string username, string email, string password)
+        public User(string username, string email, string password, DateTime date)
         {
             Username = username;
             Email = email;
             Password = password;
+            RegistrarionDate = date;
         }
     }
 }

@@ -140,7 +140,7 @@ namespace GamesShop
         {
             if (username == this.username)
             {
-                RefreshBalance(newBalance.ToString("F2"));
+                RefreshBalance(newBalance.ToString());
             }
         }
 

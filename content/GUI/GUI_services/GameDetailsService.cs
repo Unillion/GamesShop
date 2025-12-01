@@ -1,5 +1,6 @@
 ﻿using GamesShop.content.db;
 using GamesShop.content.models;
+using GamesShop.content.utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using GamesShop.content.utilities;
+using System.Windows.Media.Imaging;
 
 namespace GamesShop.content.GUI.GUI_services
 {
@@ -252,18 +252,8 @@ namespace GamesShop.content.GUI.GUI_services
         {
             if (currentGame != null)
             {
-                try
-                {
-                    UserDatabaseManager.AddGameToCart(username, currentGame.ID);
-                    UpdateAddToCartButton();
-                    MessageBox.Show($"Игра \"{currentGame.Title}\" добавлена в корзину!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Ошибка при добавлении в корзину: {ex.Message}", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                UserDatabaseManager.AddGameToCart(username, currentGame.ID);
+                UpdateAddToCartButton();
             }
         }
 
@@ -324,12 +314,23 @@ namespace GamesShop.content.GUI.GUI_services
             if (AddToCartDetailsButton != null && currentGame != null)
             {
                 bool isInCart = UserDatabaseManager.IsGameInCart(username, currentGame.ID);
-
+                bool isBought = UserDatabaseManager.IsGamePurchased(username, currentGame.ID);
                 if (isInCart)
                 {
                     AddToCartDetailsButton.Content = "✓ В корзине";
                     AddToCartDetailsButton.IsEnabled = false;
                     AddToCartDetailsButton.Background = new SolidColorBrush(Color.FromRgb(100, 100, 100));
+                }
+                else if (isBought)
+                {
+                    AddToCartDetailsButton.IsEnabled = false;
+                    AddToCartDetailsButton.Content = "Куплено";
+                    AddToCartDetailsButton.Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100));
+                    AddToCartDetailsButton.FontSize = 12;
+                    AddToCartDetailsButton.FontWeight = FontWeights.Bold;
+                    AddToCartDetailsButton.Margin = new Thickness(0, 5, 0, 0);
+                    AddToCartDetailsButton.Padding = new Thickness(10, 5, 10, 5);
+                    AddToCartDetailsButton.Background = new SolidColorBrush(Color.FromRgb(60, 100, 60));
                 }
                 else
                 {
