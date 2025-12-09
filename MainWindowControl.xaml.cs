@@ -351,16 +351,11 @@ namespace GamesShop
         }
         private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
-            var newPassword = UserManager.changePassword(userID, username);
-            if (!string.IsNullOrEmpty(newPassword))
+            bool passwordChanged = UserManager.changePassword(userID);
+            if (passwordChanged)
             {
-                UserDatabaseManager.UpdateUser(userID, newPassword: newPassword);
                 UserDatabaseManager.UpdateMultipleStats(userID, passwordChanges: 1);
-
-                UpdateServicesUsername(newPassword);
-
                 profileService.LoadProfileInformation();
-                RefreshUIWithNewUsername(newPassword);
             }
         }
 

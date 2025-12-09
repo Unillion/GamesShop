@@ -29,9 +29,15 @@ namespace GamesShop
             string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(username))
             {
                 DialogueHelper.ShowMessage("Ошибка", "Введите имя пользователя");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                DialogueHelper.ShowMessage("Ошибка", "Введите пароль");
                 return;
             }
 

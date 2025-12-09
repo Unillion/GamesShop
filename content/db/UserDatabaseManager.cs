@@ -70,6 +70,15 @@ namespace GamesShop.content.db
             }
         }
 
+        public static bool isMailExist(string mail)
+        {
+            using (var context = new GameShopContext())
+            {
+                return context.Users
+                    .Any(u => u.Email == mail);
+            }
+        }
+
         public static List<Game> GetUserLibrary(string username)
         {
             using (var context = new GameShopContext())

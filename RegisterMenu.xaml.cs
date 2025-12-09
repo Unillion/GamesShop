@@ -37,6 +37,17 @@ namespace GamesShop
                 return;
             }
 
+            if (UserDatabaseManager.isMailExist(newUser.Email))
+            {
+                DialogueHelper.ShowMessage("Ошибка", "Такая почта уже используется!");
+                return;
+            }
+
+            if (newUser.Password.Length < 6)
+            {
+                DialogueHelper.ShowMessage("Ошибка", "Пароль должен быть больше 5 знаков!");
+                return;
+            }
 
             bool success = UserDatabaseManager.AddUser(newUser);
 

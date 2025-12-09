@@ -36,7 +36,7 @@ namespace GamesShop.content.utilities
             return username;
         }
 
-        public static string changePassword(int currentUserId, string password)
+        public static bool changePassword(int currentUserId)
         {
             var dialog = new InputDialog(
                 title: "Смена пароля пользователя",
@@ -52,11 +52,14 @@ namespace GamesShop.content.utilities
                 string newPassword = dialog.InputText;
                 bool success = UserDatabaseManager.UpdateUser(currentUserId, newPassword: newPassword);
 
-                if (success) DialogueHelper.ShowMessage("Успех", "Пароль успешно изменён!");
-                return newPassword;
+                if (success)
+                {
+                    DialogueHelper.ShowMessage("Успех", "Пароль успешно изменён!");
+                    return true;
+                }
             }
 
-            return password;
+            return false;
         }
     }
 }
