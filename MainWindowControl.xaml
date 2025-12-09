@@ -323,21 +323,52 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
-                <StackPanel Orientation="Vertical" Background="Transparent">
-                    <TextBlock x:Name="CartTitleText" Text="Корзина" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <TextBlock x:Name="CartEmptyText" Text="Корзина пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
-                    <TextBlock x:Name="TotalPriceText" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <ItemsControl x:Name="CartItemsControl">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                    <Button x:Name="CheckoutButton" Content="Оформить заказ" Background="#108BEF" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" Cursor="Hand" Click="CheckoutButton_Click"/>
-                </StackPanel>
-            </ScrollViewer>
+            <Grid>
+                <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
+                    <StackPanel Orientation="Vertical" Background="Transparent">
+                        <TextBlock x:Name="CartTitleText" Text="Корзина" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                        <TextBlock x:Name="CartEmptyText" Text="Корзина пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
+                        <ItemsControl x:Name="CartItemsControl">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border x:Name="BottomBorder" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Bottom" Background="#2D2D2D" CornerRadius="8" Padding="20" Margin="20,0,20,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Итого:" Foreground="#B4B4B4" FontSize="16"/>
+                            <TextBlock x:Name="TotalPriceText" Text="0.00 ₽" Foreground="#108BEF" FontSize="24" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <Button x:Name="CheckoutButton" Grid.Column="1" Content="Оформить заказ" Background="#108BEF" Foreground="White" FontSize="16" FontWeight="Bold" Padding="30,12" Cursor="Hand" Click="CheckoutButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1478DC"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Background" Value="#3A3A3A"/>
+                                            <Setter Property="Foreground" Value="#808080"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
 
             <Grid x:Name="ProfileSection" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -534,7 +565,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="0,0,30,0">
-                        <Button x:Name="BackButton" Content="← Назад" Click="BackButton_Click" Background="Transparent" Foreground="#108BEF" BorderBrush="#108BEF" BorderThickness="1" FontSize="12" FontWeight="Bold" Height="30" Cursor="Hand" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        <Button x:Name="BackButton" Content="← Назад" Click="BackButton_Click" Background="Transparent" Foreground="#108BEF"  BorderBrush="#108BEF"  BorderThickness="1" FontSize="12" FontWeight="Bold" Height="30" Width="70" Cursor="Hand" Margin="0,0,0,20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Border Background="#3C3C3C" Height="400" CornerRadius="8" Margin="0,0,0,20">
                             <Image x:Name="GameDetailsImage" Source="/content/Images/default_game.png" Stretch="Uniform" Height="400"/>
                         </Border>

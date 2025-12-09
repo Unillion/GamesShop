@@ -36,6 +36,7 @@ namespace GamesShop.content.GUI.GUI_services
         {
             HideAllSections();
             mainWindow.CartSection.Visibility = Visibility.Visible;
+            mainWindow.BottomBorder.Visibility = Visibility.Visible;
             UpdateButtonStates(mainWindow.CartButton);
             mainWindow.RefreshCart();
         }
@@ -107,6 +108,7 @@ namespace GamesShop.content.GUI.GUI_services
             mainWindow.ProfileSection.Visibility = Visibility.Collapsed;
             mainWindow.GameDetailsSection.Visibility = Visibility.Collapsed;
             mainWindow.GameLibDetailsSection.Visibility = Visibility.Collapsed;
+            mainWindow.BottomBorder.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateButtonStates(Button activeButton)
