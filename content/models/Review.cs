@@ -34,11 +34,5 @@ namespace GamesShop.content.models
 
         [Column("Rating")]
         public int Rating { get; set; }
-
-        [Column("Likes")]
-        public int Likes { get; set; }
-
-        [Column("Dislikes")]
-        public int Dislikes { get; set; }
     }
 }

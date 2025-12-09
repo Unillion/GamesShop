@@ -160,6 +160,30 @@ namespace GamesShop.content.GUI.GUI_services
                 Margin = new Thickness(10, 0, 0, 0)
             });
 
+            if (review.UserID == userId)
+            {
+                var deleteButton = new Button
+                {
+                    Content = "✕",
+                    Foreground = new SolidColorBrush(Color.FromRgb(255, 100, 100)),
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    FontSize = 12,
+                    Padding = new Thickness(5, 2, 5, 2),
+                    Cursor = Cursors.Hand,
+                    ToolTip = "Удалить отзыв"
+                };
+
+                deleteButton.Click += (s, e) => { 
+                    GameDatabseManager.DeleteReview(review.ReviewID);
+                    LoadGameReviews(currentGame.ID);
+                };
+
+                DockPanel.SetDock(deleteButton, Dock.Right);
+                headerPanel.Children.Add(deleteButton);
+            }
+
+
             stackPanel.Children.Add(headerPanel);
 
             var ratingText = new TextBlock
@@ -179,71 +203,6 @@ namespace GamesShop.content.GUI.GUI_services
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 8, 0, 0)
             });
-
-            var likesDislikesPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 12, 0, 0),
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-
-            var likeButton = new Button
-            {
-                Content = $"👍 {review.Likes}",
-                Background = new SolidColorBrush(Colors.Transparent),
-                Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100)),
-                BorderThickness = new Thickness(0),
-                FontSize = 11,
-                Padding = new Thickness(8, 4, 8, 4),
-                Cursor = Cursors.Hand,
-                Tag = review.Likes
-            };
-
-            var dislikeButton = new Button
-            {
-                Content = $"👎 {review.Dislikes}",
-                Background = new SolidColorBrush(Colors.Transparent),
-                Foreground = new SolidColorBrush(Color.FromRgb(200, 100, 100)),
-                BorderThickness = new Thickness(0),
-                FontSize = 11,
-                Padding = new Thickness(8, 4, 8, 4),
-                Cursor = Cursors.Hand,
-                Tag = review.Dislikes,
-                Margin = new Thickness(10, 0, 0, 0)
-            };
-
-            likeButton.MouseEnter += (s, e) =>
-            {
-                likeButton.Background = new SolidColorBrush(Color.FromRgb(60, 60, 60));
-            };
-            likeButton.MouseLeave += (s, e) =>
-            {
-                likeButton.Background = new SolidColorBrush(Colors.Transparent);
-            };
-
-            dislikeButton.MouseEnter += (s, e) =>
-            {
-                dislikeButton.Background = new SolidColorBrush(Color.FromRgb(60, 60, 60));
-            };
-            dislikeButton.MouseLeave += (s, e) =>
-            {
-                dislikeButton.Background = new SolidColorBrush(Colors.Transparent);
-            };
-
-            likeButton.Click += (s, e) =>
-            {
-                InsertLike(review.ReviewID, likeButton, dislikeButton);
-            };
-
-            dislikeButton.Click += (s, e) =>
-            {
-                InsertDislike(review.ReviewID, likeButton, dislikeButton);
-            };
-
-            likesDislikesPanel.Children.Add(likeButton);
-            likesDislikesPanel.Children.Add(dislikeButton);
-            stackPanel.Children.Add(likesDislikesPanel);
-
             border.Child = stackPanel;
             return border;
         }
@@ -414,72 +373,6 @@ namespace GamesShop.content.GUI.GUI_services
         {
             var reviews = GameDatabseManager.GetGameReviews(gameId);
             return reviews.Count;
-        }
-
-        private void InsertLike(int reviewID, Button likeButton, Button dislikeButton)
-        {
-            try
-            {
-                int currentLikes = (int)likeButton.Tag;
-                int currentDislikes = (int)dislikeButton.Tag;
-
-                if (dislikeButton.Foreground.ToString() == "#FFC86464")
-                {
-                    GameDatabseManager.RemoveDislikeFromReview(reviewID);
-                    dislikeButton.Foreground = new SolidColorBrush(Color.FromRgb(200, 100, 100));
-                    currentDislikes--;
-                    dislikeButton.Tag = currentDislikes;
-                    dislikeButton.Content = $"👎 {currentDislikes}";
-                }
-
-                GameDatabseManager.AddLikeToReview(reviewID);
-                likeButton.Foreground = new SolidColorBrush(Color.FromRgb(100, 255, 100));
-                currentLikes++;
-                likeButton.Tag = currentLikes;
-                likeButton.Content = $"👍 {currentLikes}";
-
-                if (currentGame != null)
-                {
-                    LoadGameReviews(currentGame.ID);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при добавлении лайка: {ex.Message}");
-            }
-        }
-
-        private void InsertDislike(int reviewID, Button likeButton, Button dislikeButton)
-        {
-            try
-            {
-                int currentLikes = (int)likeButton.Tag;
-                int currentDislikes = (int)dislikeButton.Tag;
-
-                if (likeButton.Foreground.ToString() == "#FF64FF64")
-                {
-                    GameDatabseManager.RemoveLikeFromReview(reviewID);
-                    likeButton.Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100));
-                    currentLikes--;
-                    likeButton.Tag = currentLikes;
-                    likeButton.Content = $"👍 {currentLikes}";
-                }
-
-                GameDatabseManager.AddDislikeToReview(reviewID);
-                dislikeButton.Foreground = new SolidColorBrush(Color.FromRgb(255, 100, 100));
-                currentDislikes++;
-                dislikeButton.Tag = currentDislikes;
-                dislikeButton.Content = $"👎 {currentDislikes}";
-
-                if (currentGame != null)
-                {
-                    LoadGameReviews(currentGame.ID);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при добавлении дизлайка: {ex.Message}");
-            }
         }
 
         private string GetRatingStars(double rating)

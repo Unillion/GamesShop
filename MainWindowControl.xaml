@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GamesShop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.Resources>
         <Style TargetType="Button" x:Key="MenuButton">
             <Setter Property="Height" Value="50"/>
@@ -20,15 +20,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                            <Border x:Name="ActiveLine" 
-                                    Height="2" 
-                                    VerticalAlignment="Bottom" 
-                                    Background="#108BEF"
-                                    Opacity="0"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border x:Name="ActiveLine" Height="2" VerticalAlignment="Bottom" Background="#108BEF" Opacity="0"/>
                         </Grid>
-
                         <ControlTemplate.Triggers>
                             <Trigger Property="Tag" Value="Active">
                                 <Setter Property="Foreground" Value="#108BEF"/>
@@ -65,7 +59,6 @@
             </Setter>
         </Style>
 
-        <!-- Стили для карточек игр -->
         <Style x:Key="GameCardBorderStyle" TargetType="Border">
             <Setter Property="Background" Value="#2D2D2D"/>
             <Setter Property="BorderBrush" Value="#505050"/>
@@ -160,13 +153,8 @@
 
         <Style x:Key="GameImageStyle" TargetType="Image">
             <Setter Property="Stretch" Value="Uniform"/>
-            <Style.Triggers>
-                <Trigger Property="Source" Value="{x:Null}">
-                    <Setter Value="/content/Images/default_game.png"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
-        <!-- Стили для профиля -->
+
         <Style x:Key="ProfileCardStyle" TargetType="Border">
             <Setter Property="Background" Value="#2D2D2D"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -242,40 +230,23 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0">
-                <Button x:Name="GamesButton"
-                        Content="Игры"
-                        Style="{StaticResource MenuButton}"
-                        Click="GamesButton_Click"/>
-                <Button x:Name="LibraryButton"
-                        Content="Библиотека Игр"
-                        Style="{StaticResource MenuButton}"
-                        Click="LibraryButton_Click"/>
-                <Button x:Name="CartButton"
-                        Content="Корзина"
-                        Style="{StaticResource MenuButton}"
-                        Click="CartButton_Click"/>
+                <Button x:Name="GamesButton" Content="Игры" Style="{StaticResource MenuButton}" Click="GamesButton_Click"/>
+                <Button x:Name="LibraryButton" Content="Библиотека Игр" Style="{StaticResource MenuButton}" Click="LibraryButton_Click"/>
+                <Button x:Name="CartButton" Content="Корзина" Style="{StaticResource MenuButton}" Click="CartButton_Click"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" 
-                       HorizontalAlignment="Right" Margin="0,0,20,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,20,0">
                 <TextBlock Text="Баланс: " Foreground="White" FontSize="16" VerticalAlignment="Center"/>
-                <TextBlock x:Name="UserBalanceText" Text="0.00" Foreground="#108BEF" FontSize="16" 
-                          VerticalAlignment="Center"/>
+                <TextBlock x:Name="UserBalanceText" Text="0.00" Foreground="#108BEF" FontSize="16" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <Button x:Name="ProfileButtonControl"
-                    Style="{StaticResource ProfileButton}"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Click="ProfileButton_Click"/>
+            <Button x:Name="ProfileButtonControl" Style="{StaticResource ProfileButton}" Grid.Column="2" VerticalAlignment="Center" Click="ProfileButton_Click"/>
         </Grid>
 
         <Grid x:Name="MainContentArea">
             <ScrollViewer x:Name="GamesSection" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical" Background="Transparent" Margin="20">
-                    <TextBlock x:Name="WelcomeText" Text="Добро пожаловать!" 
-                      Foreground="White" FontSize="24" FontWeight="Bold" 
-                      Margin="0,0,0,20"/>
+                    <TextBlock x:Name="WelcomeText" Text="Добро пожаловать!" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
 
                     <Grid Margin="0,0,0,20">
                         <Grid.ColumnDefinitions>
@@ -284,46 +255,20 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" 
-                            Background="#2A2A2A" 
-                            CornerRadius="8" 
-                            Padding="10" 
-                            VerticalAlignment="Center"> 
+                        <Border Grid.Column="0" Background="#2A2A2A" CornerRadius="8" Padding="10" VerticalAlignment="Center">
                             <Grid>
-                                <TextBlock x:Name="SearchWatermark"
-                                    Text="Поиск игр..." 
-                                    Foreground="#888888"
-                                    FontSize="14"
-                                    VerticalAlignment="Center"
-                                    IsHitTestVisible="False"/>
-
-                                <TextBox x:Name="SearchTextBox"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Foreground="White"
-                                    FontSize="14"
-                                    VerticalAlignment="Center"
-                                    TextChanged="SearchTextBox_TextChanged"
-                                    GotFocus="SearchTextBox_GotFocus"
-                                    LostFocus="SearchTextBox_LostFocus"/>
+                                <TextBlock x:Name="SearchWatermark" Text="Поиск игр..." Foreground="#888888" FontSize="14" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                <TextBox x:Name="SearchTextBox" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="14" VerticalAlignment="Center" TextChanged="SearchTextBox_TextChanged" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
                             </Grid>
                         </Border>
 
-                        <ComboBox x:Name="SortComboBox"
-                            Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Width="200" VerticalAlignment="Center"
-                            Background="Gray"
-                            SelectionChanged="SortComboBox_SelectionChanged">
-
+                        <ComboBox x:Name="SortComboBox" Grid.Column="1" Margin="10,0,0,0" Width="200" VerticalAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged">
                             <ComboBox.Resources>
-
                                 <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#2A2A2A"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2A2A2A"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3A3A3A"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White"/>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
-
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#2A2A2A"/>
                                     <Setter Property="Foreground" Value="White"/>
@@ -336,7 +281,13 @@
                                     </Style.Triggers>
                                 </Style>
                             </ComboBox.Resources>
-
+                            <ComboBox.Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="Background" Value="#2A2A2A"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderBrush" Value="#444444"/>
+                                </Style>
+                            </ComboBox.Style>
                             <ComboBoxItem Content="По названию (А-Я)" Tag="NameAsc"/>
                             <ComboBoxItem Content="По названию (Я-А)" Tag="NameDesc"/>
                             <ComboBoxItem Content="По дате добавления (сначала новые)" Tag="DateDesc"/>
@@ -345,17 +296,7 @@
                             <ComboBoxItem Content="По рейтингу (низкий)" Tag="RatingAsc"/>
                         </ComboBox>
 
-                        <!-- Кнопка сброса фильтров -->
-                        <Button x:Name="ResetFiltersButton"
-                           Grid.Column="2"
-                           Content="Сбросить"
-                           Margin="10,0,0,0"
-                           Padding="15,8"
-                           VerticalAlignment="Center"
-                           Background="#3A3A3A"
-                           Foreground="White"
-                           BorderBrush="#444444"
-                           Click="ResetFiltersButton_Click"/>
+                        <Button x:Name="ResetFiltersButton" Grid.Column="2" Content="Сбросить" Margin="10,0,0,0" Padding="15,8" VerticalAlignment="Center" Background="#3A3A3A" Foreground="White" BorderBrush="#444444" Click="ResetFiltersButton_Click"/>
                     </Grid>
 
                     <ItemsControl x:Name="GamesItemsControl">
@@ -368,20 +309,10 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- Секция Библиотеки -->
-            <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" 
-                         VerticalScrollBarVisibility="Auto" Background="Transparent" 
-                         Padding="20">
+            <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                 <StackPanel Orientation="Vertical" Background="Transparent">
-                    <TextBlock x:Name="LibraryTitleText" Text="Библиотека" 
-                              Foreground="White" FontSize="24" FontWeight="Bold" 
-                              Margin="0,0,0,20"/>
-
-                    <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста" 
-                              Foreground="Gray" FontSize="16" 
-                              HorizontalAlignment="Center" VerticalAlignment="Center" 
-                              Margin="0,50,0,0"/>
-
+                    <TextBlock x:Name="LibraryTitleText" Text="Библиотека" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
                     <ItemsControl x:Name="LibraryItemsControl">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -392,23 +323,11 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- Секция Корзины -->
-            <ScrollViewer x:Name="CartSection" Visibility="Collapsed" 
-                         VerticalScrollBarVisibility="Auto" Background="Transparent" 
-                         Padding="20">
+            <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                 <StackPanel Orientation="Vertical" Background="Transparent">
-                    <TextBlock x:Name="CartTitleText" Text="Корзина" 
-                              Foreground="White" FontSize="24" FontWeight="Bold" 
-                              Margin="0,0,0,20"/>
-
-                    <TextBlock x:Name="CartEmptyText" Text="Корзина пуста" 
-                              Foreground="Gray" FontSize="16" 
-                              HorizontalAlignment="Center" VerticalAlignment="Center" 
-                              Margin="0,50,0,0"/>
-
-                    <TextBlock x:Name="TotalPriceText" Foreground="White" FontSize="18" 
-                              FontWeight="Bold" Margin="0,0,0,20"/>
-
+                    <TextBlock x:Name="CartTitleText" Text="Корзина" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock x:Name="CartEmptyText" Text="Корзина пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
+                    <TextBlock x:Name="TotalPriceText" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
                     <ItemsControl x:Name="CartItemsControl">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -416,16 +335,10 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-
-                    <Button x:Name="CheckoutButton" Content="Оформить заказ" 
-                           Background="#108BEF" Foreground="White" FontSize="16" 
-                           FontWeight="Bold" Margin="0,20,0,0" 
-                           HorizontalAlignment="Center" Cursor="Hand" 
-                           Click="CheckoutButton_Click"/>
+                    <Button x:Name="CheckoutButton" Content="Оформить заказ" Background="#108BEF" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" Cursor="Hand" Click="CheckoutButton_Click"/>
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- Секция Профиля -->
             <Grid x:Name="ProfileSection" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -433,86 +346,57 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Заголовок -->
-                <TextBlock Grid.Row="0" 
-               Text="Профиль Пользователя" 
-               Foreground="White" 
-               FontSize="32" 
-               FontWeight="Bold" 
-               HorizontalAlignment="Center" 
-               Margin="0,20,0,30"/>
+                <TextBlock Grid.Row="0" Text="Профиль Пользователя" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,30"/>
 
-                <!-- Основной контент -->
                 <Grid Grid.Row="1" Margin="40,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="400"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Левая часть - информация о пользователе -->
                     <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <!-- Основная информация -->
                         <Border Style="{StaticResource ProfileCardStyle}">
                             <StackPanel>
-                                <!-- Аватар и имя -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="100" Height="100" 
-                               Background="#3C3C3C" CornerRadius="50" 
-                               Margin="0,0,20,0">
-                                        <TextBlock Text="👤" FontSize="40" 
-                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Border Width="100" Height="100" Background="#3C3C3C" CornerRadius="50" Margin="0,0,20,0">
+                                        <TextBlock Text="👤" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
-
                                     <StackPanel VerticalAlignment="Center">
-                                        <TextBlock x:Name="ProfileUsernameText" Text="Имя пользователя" 
-                                      Style="{StaticResource ProfileTitleStyle}"/>
-                                        <TextBlock x:Name="ProfileEmailText" Text="user@example.com" 
-                                      Style="{StaticResource ProfileSubtitleStyle}"/>
+                                        <TextBlock x:Name="ProfileUsernameText" Text="Имя пользователя" Style="{StaticResource ProfileTitleStyle}"/>
+                                        <TextBlock x:Name="ProfileEmailText" Text="user@example.com" Style="{StaticResource ProfileSubtitleStyle}"/>
                                     </StackPanel>
                                 </StackPanel>
-
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                     <Border Style="{StaticResource StatCardStyle}" Margin="0,0,15,0">
                                         <StackPanel>
                                             <TextBlock Text="Баланс" Style="{StaticResource StatLabelStyle}"/>
-                                            <TextBlock x:Name="ProfileBalanceText" Text="0.00 $" 
-                                          Style="{StaticResource BalanceValueStyle}"/>
+                                            <TextBlock x:Name="ProfileBalanceText" Text="0.00 $" Style="{StaticResource BalanceValueStyle}"/>
                                         </StackPanel>
                                     </Border>
-
                                     <Border Style="{StaticResource StatCardStyle}">
                                         <StackPanel>
                                             <TextBlock Text="Дата регистрации" Style="{StaticResource StatLabelStyle}"/>
-                                            <TextBlock x:Name="ProfileRegistrationDate" Text="01.01.2024" 
-                                          Style="{StaticResource StatValueStyle}"/>
+                                            <TextBlock x:Name="ProfileRegistrationDate" Text="01.01.2024" Style="{StaticResource StatValueStyle}"/>
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
 
-                        <!-- Функциональные кнопки -->
                         <Border Style="{StaticResource ProfileCardStyle}" Margin="0,25,0,0">
                             <StackPanel>
                                 <TextBlock Text="Управление профилем" Style="{StaticResource SectionTitleStyle}"/>
-
                                 <StackPanel Margin="0,20,0,0">
-                                    <Button x:Name="EditNameButton" Content="📝 Сменить Имя" Click="ChangeName_Click"
-                               Style="{StaticResource ProfileActionButtonStyle}"/>
-                                    <Button x:Name="ChangePasswordButton" Content="🔐 Сменить пароль" Click="ChangePassword_Click"
-                               Style="{StaticResource ProfileActionButtonStyle}"/>
-                                    <Button x:Name="PurchaseHistoryButton" Content="📋 История покупок" 
-                               Style="{StaticResource ProfileActionButtonStyle}"/>
+                                    <Button x:Name="EditNameButton" Content="📝 Сменить Имя" Click="ChangeName_Click" Height="45" FontSize="14" Margin="0,0,0,10" Style="{StaticResource ProfileActionButtonStyle}"/>
+                                    <Button x:Name="ChangePasswordButton" Content="🔐 Сменить пароль" Click="ChangePassword_Click" Height="45" FontSize="14" Margin="0,0,0,10" Style="{StaticResource ProfileActionButtonStyle}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
 
-                    <!-- Правая часть - статистика -->
                     <Border Grid.Column="1" Style="{StaticResource ProfileCardStyle}">
                         <StackPanel>
                             <TextBlock Text="📊 Статистика" Style="{StaticResource SectionTitleStyle}"/>
-
                             <StackPanel Margin="0,20,0,0">
                                 <Border Style="{StaticResource StatItemStyle}">
                                     <StackPanel Orientation="Horizontal">
@@ -523,7 +407,6 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
-
                                 <Border Style="{StaticResource StatItemStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="💰" Style="{StaticResource StatIconStyle}"/>
@@ -533,7 +416,6 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
-
                                 <Border Style="{StaticResource StatItemStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="💰" Style="{StaticResource StatIconStyle}"/>
@@ -543,7 +425,6 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
-
                                 <Border Style="{StaticResource StatItemStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="📝" Style="{StaticResource StatIconStyle}"/>
@@ -576,21 +457,15 @@
                     </Border>
                 </Grid>
 
-                <!-- Нижняя панель -->
                 <Border Grid.Row="2" Style="{StaticResource ProfileCardStyle}" Margin="40,20">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="AddBalanceButton" Content="💳 Пополнить баланс" Click="AddToBalance_Click"
-                   Style="{StaticResource DialogButtonStyle}" Margin="0,0,15,0" Width="200"/>
-                        <Button x:Name="LogoutButton" Content="🚪 Выйти" Click="Logout_Click"
-                   Style="{StaticResource SecondaryButtonStyle}" Width="150"/>
+                        <Button x:Name="AddBalanceButton" Content="💳 Пополнить баланс" Click="AddToBalance_Click" Height="45" FontSize="14" Margin="0,0,15,0" Width="200" Style="{StaticResource ProfileActionButtonStyle}"/>
+                        <Button x:Name="LogoutButton" Content="🚪 Выйти" Click="Logout_Click" Height="45" FontSize="14" Width="150" Style="{StaticResource ProfileActionButtonStyle}"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- секция игры в библиотеке-->
-            <ScrollViewer x:Name="GameLibDetailsSection" Visibility="Collapsed" 
-                    VerticalScrollBarVisibility="Auto" Background="Transparent" 
-                    Padding="20">
+            <ScrollViewer x:Name="GameLibDetailsSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400"/>
@@ -599,52 +474,27 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,30,0">
                         <Border Background="#3C3C3C" Height="400" CornerRadius="8" Margin="0,0,0,20">
-                            <Image x:Name="GameLibDetailsImage" 
-                            Source="/content/Images/default_game.png" 
-                            Stretch="Uniform" 
-                            Height="400"/>
+                            <Image x:Name="GameLibDetailsImage" Source="/content/Images/default_game.png" Stretch="Uniform" Height="400"/>
                         </Border>
-
-                        <Button x:Name="LibBackButton" 
-                            Content="← Назад" 
-                            Click="BackFromLibButton_Click"
-                            Background="Transparent" Foreground="#108BEF"
-                            BorderBrush="#108BEF" BorderThickness="1"
-                            FontSize="12" FontWeight="Bold" 
-                            Height="30" Cursor="Hand"
-                            Margin="10,0,0,0"
-                            VerticalAlignment="Center"/>
+                        <Button x:Name="LibBackButton" Content="← Назад" Click="BackFromLibButton_Click" Background="Transparent" Foreground="#108BEF" BorderBrush="#108BEF" BorderThickness="1" FontSize="12" FontWeight="Bold" Height="30" Cursor="Hand" Margin="10,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                            <TextBlock x:Name="GameLibDetailsTitle" Text="Название игры" 
-                                Foreground="White" FontSize="28" 
-                                FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="GameLibDetailsTitle" Text="Название игры" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBlock x:Name="GameLibDetailsGenre" Text="Жанр" 
-                                Foreground="#B4B4B4" FontSize="14"
-                                FontStyle="Italic"/>
+                            <TextBlock x:Name="GameLibDetailsGenre" Text="Жанр" Foreground="#B4B4B4" FontSize="14" FontStyle="Italic"/>
                             <TextBlock Text=" • " Foreground="#B4B4B4" FontSize="14"/>
-                            <TextBlock x:Name="GameLibDetailsReleaseDate" Text="Дата выхода" 
-                                Foreground="#B4B4B4" FontSize="14"/>
+                            <TextBlock x:Name="GameLibDetailsReleaseDate" Text="Дата выхода" Foreground="#B4B4B4" FontSize="14"/>
                         </StackPanel>
-
-                        <TextBlock x:Name="GameLibDetailsDescription" Text="Описание игры" 
-                            Foreground="White" FontSize="14" TextWrapping="Wrap"
-                            Margin="0,0,0,30" TextAlignment="Justify"/>
-
+                        <TextBlock x:Name="GameLibDetailsDescription" Text="Описание игры" Foreground="White" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,30" TextAlignment="Justify"/>
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
                             <StackPanel>
-                                <TextBlock Text="Характеристики" Foreground="White" 
-                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                                <StackPanel x:Name="GameLibDetailsFeatures">
-                                </StackPanel>
+                                <TextBlock Text="Характеристики" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <StackPanel x:Name="GameLibDetailsFeatures"/>
                             </StackPanel>
                         </Border>
-
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
@@ -653,104 +503,45 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="Ключ активации" 
-                                       Foreground="White" 
-                                       FontSize="16" 
-                                       FontWeight="Bold"
-                                       VerticalAlignment="Center"/>
-
-                                    <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" 
-                                        VerticalAlignment="Center"
-                                        Cursor="Hand" Click="CopyActivationKey_Click" Padding="5" Width="30" Height="30">
-                                        <Image Source="/content/Images/copy_icon.png" 
-                                        Width="20" 
-                                        Height="20"
-                                        ToolTip="Скопировать ключ активации"/>
+                                    <TextBlock Text="Ключ активации" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand" Click="CopyActivationKey_Click" Padding="5" Width="30" Height="30">
+                                        <Image Source="/content/Images/copy_icon.png" Width="20" Height="20" ToolTip="Скопировать ключ активации"/>
                                     </Button>
-
-                                    <Button x:Name="UpdateActivationKey" 
-                                        Grid.Column="2"
-                                        Background="Transparent" 
-                                        BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" 
-                                        VerticalAlignment="Center"
-                                        Cursor="Hand" Click="UpdateActivationKey_Click" Padding="5" Width="30" Height="30">
-                                        <Image Source="/content/Images/refresh_icon.png" 
-                                           Width="20" 
-                                           Height="20"
-                                           ToolTip="Обновить ключ активации"/>
+                                    <Button x:Name="UpdateActivationKey" Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand" Click="UpdateActivationKey_Click" Padding="5" Width="30" Height="30">
+                                        <Image Source="/content/Images/refresh_icon.png" Width="20" Height="20" ToolTip="Обновить ключ активации"/>
                                     </Button>
                                 </Grid>
-
-                                <TextBlock Name="ActivationKey" 
-                                   Foreground="White" 
-                                   FontSize="16" 
-                                   Margin="0,10,0,0"/>
+                                <TextBlock Name="ActivationKey" Foreground="White" FontSize="16" Margin="0,10,0,0"/>
                             </StackPanel>
                         </Border>
-
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
                             <StackPanel>
-                                <TextBlock Text="Статистика по игре" Foreground="White" 
-                                    FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-
+                                <TextBlock Text="Статистика по игре" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
                                 <StackPanel x:Name="GameStatisticsPanel">
-                                    <TextBlock x:Name="GameStatisticsPanelText" Text="Загрузка статистики..." 
-                                        Foreground="#B4B4B4" FontSize="14"
-                                        FontStyle="Italic"/>
+                                    <TextBlock x:Name="GameStatisticsPanelText" Text="Загрузка статистики..." Foreground="#B4B4B4" FontSize="14" FontStyle="Italic"/>
                                 </StackPanel>
-
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
 
-            <!-- Секция страницы игры -->
-            <ScrollViewer x:Name="GameDetailsSection" Visibility="Collapsed" 
-              VerticalScrollBarVisibility="Auto" Background="Transparent" 
-              Padding="20">
+            <ScrollViewer x:Name="GameDetailsSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Левая колонка - изображение и кнопка покупки -->
                     <StackPanel Grid.Column="0" Margin="0,0,30,0">
-                        <!-- Большое изображение игры -->
+                        <Button x:Name="BackButton" Content="← Назад" Click="BackButton_Click" Background="Transparent" Foreground="#108BEF" BorderBrush="#108BEF" BorderThickness="1" FontSize="12" FontWeight="Bold" Height="30" Cursor="Hand" Margin="10,0,0,0" VerticalAlignment="Center"/>
                         <Border Background="#3C3C3C" Height="400" CornerRadius="8" Margin="0,0,0,20">
-                            <Image x:Name="GameDetailsImage" 
-                            Source="/content/Images/default_game.png" 
-                            Stretch="Uniform" 
-                            Height="400"/>
+                            <Image x:Name="GameDetailsImage" Source="/content/Images/default_game.png" Stretch="Uniform" Height="400"/>
                         </Border>
-
-                        <Button x:Name="BackButton" 
-                            Content="← Назад" 
-                            Click="BackButton_Click"
-                            Background="Transparent" Foreground="#108BEF"
-                            BorderBrush="#108BEF" BorderThickness="1"
-                            FontSize="12" FontWeight="Bold" 
-                            Height="30" Cursor="Hand"
-                            Margin="10,0,0,0"
-                            VerticalAlignment="Center"/>
-
-                        <!-- Блок с ценой и кнопкой покупки -->
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="20">
                             <StackPanel>
-                                <TextBlock x:Name="GameDetailsPrice" Text="0.00 $" 
-                              Foreground="#108BEF" FontSize="24" 
-                              FontWeight="Bold" HorizontalAlignment="Center"
-                              Margin="0,0,0,15"/>
-
-                                <!-- Кнопка "В корзину" как альтернатива -->
-                                <Button x:Name="AddToCartDetailsButton" Content="В корзину" 
-                                    Background="Transparent" Foreground="White"
-                                    FontSize="14" FontWeight="Bold" 
-                                    BorderBrush="#108BEF" BorderThickness="1"
-                                    Height="35" Cursor="Hand" Margin="0,10,0,0"
-                                    Click="AddToCartDetailsButton_Click">
+                                <TextBlock x:Name="GameDetailsPrice" Text="0.00 $" Foreground="#108BEF" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                                <Button x:Name="AddToCartDetailsButton" Content="В корзину" Background="Transparent" Foreground="White" FontSize="14" FontWeight="Bold" BorderBrush="#108BEF" BorderThickness="1" Height="35" Cursor="Hand" Margin="0,10,0,0" Click="AddToCartDetailsButton_Click">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Style.Triggers>
@@ -765,71 +556,30 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- Правая колонка - информация об игре -->
                     <StackPanel Grid.Column="1">
-                        <!-- Заголовок и рейтинг -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                            <TextBlock x:Name="GameDetailsTitle" Text="Название игры" 
-                          Foreground="White" FontSize="28" 
-                          FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="GameDetailsRating" Text="★★★★★" 
-                          Foreground="Gold" FontSize="16" 
-                          VerticalAlignment="Center" Margin="15,0,0,0"/>
+                            <TextBlock x:Name="GameDetailsTitle" Text="Название игры" Foreground="White" FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="GameDetailsRating" Text="★★★★★" Foreground="Gold" FontSize="16" VerticalAlignment="Center" Margin="15,0,0,0"/>
                         </StackPanel>
-
-                        <!-- Жанр и дата выхода -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBlock x:Name="GameDetailsGenre" Text="Жанр" 
-                          Foreground="#B4B4B4" FontSize="14"
-                          FontStyle="Italic"/>
+                            <TextBlock x:Name="GameDetailsGenre" Text="Жанр" Foreground="#B4B4B4" FontSize="14" FontStyle="Italic"/>
                             <TextBlock Text=" • " Foreground="#B4B4B4" FontSize="14"/>
-                            <TextBlock x:Name="GameDetailsReleaseDate" Text="Дата выхода" 
-                          Foreground="#B4B4B4" FontSize="14"/>
+                            <TextBlock x:Name="GameDetailsReleaseDate" Text="Дата выхода" Foreground="#B4B4B4" FontSize="14"/>
                         </StackPanel>
-
-                        <!-- Полное описание -->
-                        <TextBlock x:Name="GameDetailsDescription" Text="Описание игры" 
-                      Foreground="White" FontSize="14" TextWrapping="Wrap"
-                      Margin="0,0,0,30" TextAlignment="Justify"/>
-
-                        <!-- Характеристики -->
+                        <TextBlock x:Name="GameDetailsDescription" Text="Описание игры" Foreground="White" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,30" TextAlignment="Justify"/>
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15" Margin="0,0,0,30">
                             <StackPanel>
-                                <TextBlock Text="Характеристики" Foreground="White" 
-                              FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-
-                                <StackPanel x:Name="GameDetailsFeatures">
-                                    <!-- Характеристики будут добавляться динамически -->
-                                </StackPanel>
+                                <TextBlock Text="Характеристики" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <StackPanel x:Name="GameDetailsFeatures"/>
                             </StackPanel>
                         </Border>
-
-                        <!-- Отзывы -->
                         <Border Background="#2D2D2D" CornerRadius="8" Padding="15">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                                    <TextBlock Text="Отзывы" Foreground="White" 
-                                  FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock x:Name="GameDetailsReviewsCount" Text=" (0)" 
-                                  Foreground="#B4B4B4" FontSize="16" 
-                                  Margin="5,0,0,0"/>
+                                    <TextBlock Text="Отзывы" Foreground="White" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock x:Name="GameDetailsReviewsCount" Text=" (0)" Foreground="#B4B4B4" FontSize="16" Margin="5,0,0,0"/>
                                 </StackPanel>
-
-                                <StackPanel x:Name="GameDetailsReviewsList">
-                                    <!-- Отзывы будут добавляться динамически -->
-                                    <TextBlock Text="Пока нет отзывов" 
-                                  Foreground="#B4B4B4" FontSize="14" 
-                                  FontStyle="Italic" HorizontalAlignment="Center"
-                                  Margin="0,20,0,0"/>
-                                </StackPanel>
-
-                                <!-- Кнопка добавления отзыва -->
-                                <Button Content="Написать отзыв" 
-                           Background="Transparent" Foreground="#108BEF"
-                           BorderBrush="#108BEF" BorderThickness="1"
-                           FontSize="12" FontWeight="Bold" 
-                           Height="30" Cursor="Hand" Margin="0,15,0,0"
-                           Click="AddReviewButton_Click">
+                                <Button Content="Написать отзыв" Background="Transparent" Foreground="#108BEF" BorderBrush="#108BEF" BorderThickness="1" FontSize="12" FontWeight="Bold" Height="30" Cursor="Hand" Margin="0,15,0,0" Click="AddReviewButton_Click">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Style.Triggers>
@@ -840,6 +590,9 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
+                                <StackPanel x:Name="GameDetailsReviewsList">
+                                    <TextBlock Text="Пока нет отзывов" Foreground="#B4B4B4" FontSize="14" FontStyle="Italic" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
