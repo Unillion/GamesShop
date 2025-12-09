@@ -256,7 +256,6 @@
                         Click="CartButton_Click"/>
             </StackPanel>
 
-            <!-- Баланс пользователя -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" 
                        HorizontalAlignment="Right" Margin="0,0,20,0">
                 <TextBlock Text="Баланс: " Foreground="White" FontSize="16" VerticalAlignment="Center"/>
@@ -264,7 +263,6 @@
                           VerticalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Кнопка профиля -->
             <Button x:Name="ProfileButtonControl"
                     Style="{StaticResource ProfileButton}"
                     Grid.Column="2"
@@ -272,14 +270,93 @@
                     Click="ProfileButton_Click"/>
         </Grid>
 
-        <!-- Область контента -->
         <Grid x:Name="MainContentArea">
-            <!-- Секция Игр -->
             <ScrollViewer x:Name="GamesSection" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical" Background="Transparent" Margin="20">
                     <TextBlock x:Name="WelcomeText" Text="Добро пожаловать!" 
-                              Foreground="White" FontSize="24" FontWeight="Bold" 
-                              Margin="0,0,0,20"/>
+                      Foreground="White" FontSize="24" FontWeight="Bold" 
+                      Margin="0,0,0,20"/>
+
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" 
+                            Background="#2A2A2A" 
+                            CornerRadius="8" 
+                            Padding="10" 
+                            VerticalAlignment="Center"> 
+                            <Grid>
+                                <TextBlock x:Name="SearchWatermark"
+                                    Text="Поиск игр..." 
+                                    Foreground="#888888"
+                                    FontSize="14"
+                                    VerticalAlignment="Center"
+                                    IsHitTestVisible="False"/>
+
+                                <TextBox x:Name="SearchTextBox"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="White"
+                                    FontSize="14"
+                                    VerticalAlignment="Center"
+                                    TextChanged="SearchTextBox_TextChanged"
+                                    GotFocus="SearchTextBox_GotFocus"
+                                    LostFocus="SearchTextBox_LostFocus"/>
+                            </Grid>
+                        </Border>
+
+                        <ComboBox x:Name="SortComboBox"
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Width="200" VerticalAlignment="Center"
+                            Background="Gray"
+                            SelectionChanged="SortComboBox_SelectionChanged">
+
+                            <ComboBox.Resources>
+
+                                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3A3A3A"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="#2A2A2A"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Padding" Value="10,5"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <Setter Property="Background" Value="#3A3A3A"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Resources>
+
+                            <ComboBoxItem Content="По названию (А-Я)" Tag="NameAsc"/>
+                            <ComboBoxItem Content="По названию (Я-А)" Tag="NameDesc"/>
+                            <ComboBoxItem Content="По дате добавления (сначала новые)" Tag="DateDesc"/>
+                            <ComboBoxItem Content="По дате добавления (сначала старые)" Tag="DateAsc"/>
+                            <ComboBoxItem Content="По рейтингу (высокий)" Tag="RatingDesc"/>
+                            <ComboBoxItem Content="По рейтингу (низкий)" Tag="RatingAsc"/>
+                        </ComboBox>
+
+                        <!-- Кнопка сброса фильтров -->
+                        <Button x:Name="ResetFiltersButton"
+                           Grid.Column="2"
+                           Content="Сбросить"
+                           Margin="10,0,0,0"
+                           Padding="15,8"
+                           VerticalAlignment="Center"
+                           Background="#3A3A3A"
+                           Foreground="White"
+                           BorderBrush="#444444"
+                           Click="ResetFiltersButton_Click"/>
+                    </Grid>
 
                     <ItemsControl x:Name="GamesItemsControl">
                         <ItemsControl.ItemsPanel>

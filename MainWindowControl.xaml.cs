@@ -45,6 +45,8 @@ namespace GamesShop
 
             navigationService = new NavigationService(this);
 
+            SortComboBox.SelectedIndex = 0;
+
             UpdateServicesUsername(username);
             InitializeData();
             RefreshUIWithNewUsername(username);
@@ -360,6 +362,53 @@ namespace GamesShop
                 profileService.LoadProfileInformation();
                 RefreshUIWithNewUsername(newPassword);
             }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateSearchWatermarkVisibility();
+            gameService.SearchGames(SearchTextBox.Text);
+            gameService.RenderGames(GamesItemsControl);
+        }
+
+        private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SortComboBox == null || SortComboBox.SelectedItem == null)
+                return;
+
+            if (SortComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                var tag = selectedItem.Tag?.ToString();
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    gameService?.SortGames(tag);
+                    gameService?.RenderGames(GamesItemsControl);
+                }
+            }
+        }
+        private void ResetFiltersButton_Click(object sender, RoutedEventArgs e)
+        {
+            gameService.ResetFilters();
+            SearchTextBox.Text = "";
+            SortComboBox.SelectedIndex = 0;
+            gameService.RenderGames(GamesItemsControl);
+        }
+
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            UpdateSearchWatermarkVisibility();
+        }
+
+        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UpdateSearchWatermarkVisibility();
+        }
+
+        private void UpdateSearchWatermarkVisibility()
+        {
+            SearchWatermark.Visibility = string.IsNullOrEmpty(SearchTextBox.Text)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
     }
 }

@@ -22,7 +22,7 @@ public class GameShopContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            @"Server=MISHA1\SQLEXPRESS01;Database=gamesbd_1;Trusted_Connection=True;TrustServerCertificate=True;");
+            @"Server=MISHA1\SQLEXPRESS01;Database=gamesbd_v2;Trusted_Connection=True;TrustServerCertificate=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
