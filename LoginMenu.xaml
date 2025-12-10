@@ -31,44 +31,21 @@
     <Border CornerRadius="12" Padding="20" Margin="20" Background="#2D2D2D">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="250">
 
-            <TextBlock Text="Вход"
-                       FontSize="28"
-                       FontWeight="Bold"
-                       Foreground="White"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,25"/>
+            <TextBlock Text="Вход" FontSize="28" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,25"/>
 
             <TextBlock Text="Имя пользователя" Foreground="White"/>
-            <TextBox Name="UsernameTextBox"
-                     Margin="0,5,0,15"
-                     Height="30"
-                     Padding="5"
-                     Background="#3C3C3C"
-                     Foreground="White"
-                     BorderBrush="#5C5C5C"/>
+            <TextBox Name="UsernameTextBox" Margin="0,5,0,15" Height="30" Padding="5" Background="#3C3C3C" Foreground="White" BorderBrush="#5C5C5C"/>
 
             <TextBlock Text="Пароль" Foreground="White"/>
-            <PasswordBox Name="PasswordBox"
-                         Margin="0,5,0,25"
-                         Height="30"
-                         Padding="5"
-                         Background="#3C3C3C"
-                         Foreground="White"
-                         BorderBrush="#5C5C5C"/>
+            <PasswordBox Name="PasswordBox" Margin="0,5,0,25" Height="30" Padding="5" Background="#3C3C3C" Foreground="White" BorderBrush="#5C5C5C"/>
 
-            <Button Content="Войти"
-                    Background="#0078D7"
-                    Foreground="White"
-                    FontWeight="Bold"
-                    Height="35"
-                    Cursor="Hand"
-                    Click="LoginButton_Click"/>
+            <Button Content="Войти" Background="#0078D7" Foreground="White" FontWeight="Bold" Height="35" Cursor="Hand" Click="LoginButton_Click"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                 <TextBlock Text="Нет аккаунта?" VerticalAlignment="Center" Foreground="White"/>
                 <Button Content="Зарегистрироваться"
                         Style="{StaticResource LinkButton}"
-            Click="GoToRegister_Click"/>
+                        Click="GoToRegister_Click"/>
             </StackPanel>
             
         </StackPanel>
