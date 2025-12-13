@@ -9,24 +9,96 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="content\Images\ac_valhalla.jpg" />
+    <None Remove="content\Images\bf2042.jpg" />
+    <None Remove="content\Images\bg3.jpg" />
     <None Remove="content\Images\copy_icon.png" />
+    <None Remove="content\Images\cs2.jpg" />
+    <None Remove="content\Images\cyberpunk2077.jpg" />
+    <None Remove="content\Images\ds3.jpg" />
+    <None Remove="content\Images\elden_ring.jpg" />
+    <None Remove="content\Images\farcry6.jpg" />
+    <None Remove="content\Images\fifa23.jpg" />
     <None Remove="content\Images\game_logo.png" />
+    <None Remove="content\Images\game_logo3.png" />
+    <None Remove="content\Images\gta5.jpg" />
+    <None Remove="content\Images\hl_alyx.jpg" />
     <None Remove="content\Images\logo2.png" />
+    <None Remove="content\Images\mario_odyssey.jpg" />
     <None Remove="content\Images\profile.png" />
+    <None Remove="content\Images\rdr2.jpg" />
     <None Remove="content\Images\refresh_icon.png" />
+    <None Remove="content\Images\sims4.jpg" />
+    <None Remove="content\Images\watchdogs_legion.jpg" />
+    <None Remove="content\Images\witcher3.jpg" />
+    <None Remove="content\Images\zelda_botw.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="content\Images\ac_valhalla.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\bf2042.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\bg3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="content\Images\copy_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\cs2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\cyberpunk2077.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\ds3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\elden_ring.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\farcry6.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\fifa23.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\game_logo3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\gta5.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\hl_alyx.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="content\Images\logo2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="content\Images\mario_odyssey.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="content\Images\profile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="content\Images\rdr2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="content\Images\refresh_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\sims4.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\watchdogs_legion.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\witcher3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="content\Images\zelda_botw.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

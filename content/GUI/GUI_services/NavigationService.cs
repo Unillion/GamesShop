@@ -93,6 +93,7 @@ namespace GamesShop.content.GUI.GUI_services
                 }
                 else if (previousSection == mainWindow.ProfileSection)
                     UpdateButtonStates(null);
+
             }
             else
             {
@@ -152,7 +153,7 @@ namespace GamesShop.content.GUI.GUI_services
                 mainWindow.LibrarySection,
                 mainWindow.CartSection,
                 mainWindow.ProfileSection,
-                mainWindow.GameLibDetailsSection
+                mainWindow.GameLibDetailsSection,
             };
 
             return sections.FirstOrDefault(s => s.Visibility == Visibility.Visible) ?? mainWindow.GamesSection;

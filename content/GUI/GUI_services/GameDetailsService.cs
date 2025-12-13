@@ -45,7 +45,7 @@ namespace GamesShop.content.GUI.GUI_services
             {
                 GameDetailsTitle.Text = game.Title;
                 GameDetailsGenre.Text = GetGameGenres(game.ID);
-                GameDetailsPrice.Text = $"{game.Price:F2} $";
+                GameDetailsPrice.Text = $"{game.Price:F2} ₽";
                 GameDetailsDescription.Text = game.Description;
                 GameDetailsRating.Text = GetRatingStars(game.Rating);
                 GameDetailsReleaseDate.Text = game.ReleaseDate.ToString("dd.MM.yyyy") ?? "Неизвестно";
@@ -209,8 +209,11 @@ namespace GamesShop.content.GUI.GUI_services
 
         public void AddToCart()
         {
-            if (currentGame != null)
+            if (currentGame != null) 
             {
+                if (UserDatabaseManager.IsGameInCart(username, currentGame.ID) ||
+                    UserDatabaseManager.IsGamePurchased(username, currentGame.ID)) return;
+
                 UserDatabaseManager.AddGameToCart(username, currentGame.ID);
                 UpdateAddToCartButton();
             }
@@ -277,12 +280,10 @@ namespace GamesShop.content.GUI.GUI_services
                 if (isInCart)
                 {
                     AddToCartDetailsButton.Content = "✓ В корзине";
-                    AddToCartDetailsButton.IsEnabled = false;
                     AddToCartDetailsButton.Background = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
                 else if (isBought)
                 {
-                    AddToCartDetailsButton.IsEnabled = false;
                     AddToCartDetailsButton.Content = "Куплено";
                     AddToCartDetailsButton.Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100));
                     AddToCartDetailsButton.FontSize = 12;

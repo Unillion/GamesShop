@@ -25,6 +25,7 @@ namespace GamesShop
     {
         private string username;
         private int userID;
+        private bool _isAdmin = false;
         private List<Game> games;
         private List<Game> cartGames;
         private Game currentGame;
@@ -137,7 +138,6 @@ namespace GamesShop
             profileService.NameChanges = NameChangesCount;
             profileService.PasswordChanges = PasswordChangesCount;
         }
-
         private void OnUserBalanceChanged(string username, decimal newBalance)
         {
             if (username == this.username)

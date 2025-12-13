@@ -64,7 +64,7 @@ namespace GamesShop.content.GUI.GUI_services
             checkoutButton.Visibility = Visibility.Visible;
 
             decimal totalPrice = cartGames.Sum(g => g.Price);
-            totalPriceText.Text = $"Общая стоимость: {totalPrice:F2} $";
+            totalPriceText.Text = $"Общая стоимость: {totalPrice:F2} ₽";
 
             RenderCartItems(cartItemsControl);
         }
@@ -104,7 +104,7 @@ namespace GamesShop.content.GUI.GUI_services
             var result = false;
             DialogueHelper.ShowConfirmation(
             $"Подтверждение заказа",
-            $"Вы уверены, что хотите оформить заказ на сумму {totalPrice:F2} $?", (actiob) => { if (actiob) result = true; });
+            $"Вы уверены, что хотите оформить заказ на сумму {totalPrice:F2} ₽?", (actiob) => { if (actiob) result = true; });
 
             if (result && UserDatabaseManager.GetUserBalance(username) >= totalPrice)
             {
@@ -125,7 +125,8 @@ namespace GamesShop.content.GUI.GUI_services
                 OnCartUpdated?.Invoke();
                 DialogueHelper.ShowMessage("Оформление", "Все игры успешно куплены!");
             }
-            else DialogueHelper.ShowMessage("Ошибка", "Недостаточно средств! :(");
+            else if (result && UserDatabaseManager.GetUserBalance(username) < totalPrice)
+                DialogueHelper.ShowMessage("Ошибка", "Недостаточно средств! :(");
         }
 
         public void RemoveFromCart(int gameId)

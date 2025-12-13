@@ -233,6 +233,7 @@
                 <Button x:Name="GamesButton" Content="Игры" Style="{StaticResource MenuButton}" Click="GamesButton_Click"/>
                 <Button x:Name="LibraryButton" Content="Библиотека Игр" Style="{StaticResource MenuButton}" Click="LibraryButton_Click"/>
                 <Button x:Name="CartButton" Content="Корзина" Style="{StaticResource MenuButton}" Click="CartButton_Click"/>
+                        
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,20,0">

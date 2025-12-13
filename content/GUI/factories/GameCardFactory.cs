@@ -126,7 +126,7 @@ namespace GamesShop.content.GUI.factories
             if (isLibItem) return;
             var priceText = new TextBlock
             {
-                Text = $"{game.Price:F2} ",
+                Text = $"{game.Price:F2}₽ ",
                 Foreground = new SolidColorBrush(Color.FromRgb(16, 139, 239)),
                 FontSize = isCartItem ? 14 : 16,
                 FontWeight = FontWeights.Bold,
@@ -191,7 +191,6 @@ namespace GamesShop.content.GUI.factories
                     Padding = new Thickness(10, 5, 10, 5),
                     FontWeight = FontWeights.Bold,
                     Cursor = Cursors.Arrow,
-                    IsEnabled = false,
                     Tag = gameId
                 };
             }
@@ -213,16 +212,19 @@ namespace GamesShop.content.GUI.factories
 
                 cartButton.MouseEnter += (s, e) =>
                 {
+                    if (isInCart) return;
                     cartButton.Background = new SolidColorBrush(Color.FromRgb(20, 120, 220));
                 };
 
                 cartButton.MouseLeave += (s, e) =>
                 {
+                    if (isInCart) return;
                     cartButton.Background = new SolidColorBrush(Color.FromRgb(16, 139, 239));
                 };
 
                 cartButton.Click += (s, e) =>
                 {
+                    if (isInCart) return;
                     onCartAction?.Invoke(gameId);
                     UpdateButtonToInCart(cartButton);
                     e.Handled = true;
@@ -339,7 +341,6 @@ namespace GamesShop.content.GUI.factories
             button.Background = new SolidColorBrush(Color.FromRgb(100, 100, 100));
             button.Foreground = new SolidColorBrush(Color.FromRgb(200, 200, 200));
             button.Cursor = Cursors.Arrow;
-            button.IsEnabled = false;
         }
     }
 }

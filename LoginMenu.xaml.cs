@@ -46,7 +46,16 @@ namespace GamesShop
             if (isValid)
             {
                 DialogueHelper.ShowMessage("Успех", "Вход успешно выполнен!");
-                Main mainWindow = new Main(username);
+
+                Window mainWindow = new Window
+                {
+                    Title = "Главное окно",
+                    Content = new MainWindowControl(username),
+                    Width = 800,
+                    Height = 600,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
                 mainWindow.Show();
                 this.Close();
             }

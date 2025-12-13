@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:GamesShop.dialogueUserControls"
              mc:Ignorable="d" 
              WindowStartupLocation="CenterScreen"
-             Width="400" Height="200">
+             Width="400" Height="200" ResizeMode="NoResize">
     <Border Background="#2D2D2D" CornerRadius="8" Padding="20">
         <StackPanel VerticalAlignment="Center">
             <TextBlock x:Name="MessageText" 
