@@ -45,7 +45,7 @@ namespace GamesShop
 
             if (newUser.Password.Length < 6)
             {
-                DialogueHelper.ShowMessage("Ошибка", "Пароль должен быть больше 5 знаков!");
+                DialogueHelper.ShowMessage("Ошибка", "Пароль должен быть больше 6 знаков!");
                 return;
             }
 
