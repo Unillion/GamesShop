@@ -112,14 +112,14 @@ namespace GamesShop.content.GUI.GUI_services
                 {
                     UserDatabaseManager.RemoveGameFromCart(username, game.ID);
                     UserDatabaseManager.AddGameToLibrary(username, game.ID);
-                    UserDatabaseManager.removeFromUserBalance(username, totalPrice);
-
+                    
                     GameDatabseManager.IncrementPurchaseCount(game.ID);
 
                     UserDatabaseManager.UpdateMultipleStats(UserDatabaseManager.GetUserId(username), moneySpent: totalPrice, gamesPurchased: 1);
-
-                    window.RefreshBalance(UserDatabaseManager.GetUserBalance(username).ToString());
                 }
+
+                UserDatabaseManager.removeFromUserBalance(username, totalPrice);
+                window.RefreshBalance(UserDatabaseManager.GetUserBalance(username).ToString());
 
                 LoadCart();
                 OnCartUpdated?.Invoke();

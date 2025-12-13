@@ -41,6 +41,12 @@ namespace GamesShop.dialogueUserControls
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
+            if (decimal.TryParse(AmountTextBox.Text, out decimal total) && total > 100000)
+            {
+                ShowMessage("Ошибка", "Слишком большое число");
+                return;
+            }
+
             if (decimal.TryParse(AmountTextBox.Text, out decimal amount) && amount > 0)
             {
                 BalanceAdded?.Invoke(amount);
