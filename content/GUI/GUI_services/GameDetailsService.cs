@@ -43,9 +43,11 @@ namespace GamesShop.content.GUI.GUI_services
 
             if (GameDetailsTitle != null)
             {
+                string price = game.Price > 0 ? game.Price.ToString() + "₽" : "Бесплатно";
+
                 GameDetailsTitle.Text = game.Title;
                 GameDetailsGenre.Text = GetGameGenres(game.ID);
-                GameDetailsPrice.Text = $"{game.Price:F2} ₽";
+                GameDetailsPrice.Text = price;
                 GameDetailsDescription.Text = game.Description;
                 GameDetailsRating.Text = GetRatingStars(game.Rating);
                 GameDetailsReleaseDate.Text = game.ReleaseDate.ToString("dd.MM.yyyy") ?? "Неизвестно";

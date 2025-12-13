@@ -313,7 +313,7 @@
             <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                 <StackPanel Orientation="Vertical" Background="Transparent">
                     <TextBlock x:Name="LibraryTitleText" Text="Библиотека" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
+                    <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста, но ты всё еще можешь купить игру!" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
                     <ItemsControl x:Name="LibraryItemsControl">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -328,7 +328,7 @@
                 <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
                     <StackPanel Orientation="Vertical" Background="Transparent">
                         <TextBlock x:Name="CartTitleText" Text="Корзина" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
-                        <TextBlock x:Name="CartEmptyText" Text="Корзина пуста" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
+                        <TextBlock x:Name="CartEmptyText" Text="Корзина пуста, но ты всё еще можешь выбрать игру!" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
                         <ItemsControl x:Name="CartItemsControl">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

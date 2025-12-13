@@ -124,9 +124,10 @@ namespace GamesShop.content.GUI.factories
         private static void AddPrice(StackPanel stackPanel, Game game, bool isCartItem, bool isLibItem)
         {
             if (isLibItem) return;
+            string price = game.Price > 0 ? game.Price.ToString()+ "₽" : "Бесплатно";
             var priceText = new TextBlock
             {
-                Text = $"{game.Price:F2}₽ ",
+                Text = price,
                 Foreground = new SolidColorBrush(Color.FromRgb(16, 139, 239)),
                 FontSize = isCartItem ? 14 : 16,
                 FontWeight = FontWeights.Bold,
