@@ -10,6 +10,7 @@
         Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
+        WindowStyle="None"
         Background="#1E1E1E">
         
     <Window.Resources>
@@ -130,6 +131,12 @@
                         Style="{StaticResource LinkButton}"
                         Click="GoToLogin_Click"/>
             </StackPanel>
+
+            <Button Content="Выйти из приложения"
+                Style="{StaticResource LinkButton}"
+                Foreground="Red"
+                Click="Close_Click"
+                HorizontalAlignment="Center"/>
 
         </StackPanel>
     </Border>

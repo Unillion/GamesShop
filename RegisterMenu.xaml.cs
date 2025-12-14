@@ -49,6 +49,12 @@ namespace GamesShop
                 return;
             }
 
+            if (newUser.Username.Length > 15)
+            {
+                DialogueHelper.ShowMessage("Ошибка", "Имя пользователя не должно быть больше 15 символов!");
+                return;
+            }
+
             bool success = UserDatabaseManager.AddUser(newUser);
 
             if (success)
@@ -112,6 +118,11 @@ namespace GamesShop
             else PasswordError.Visibility = Visibility.Hidden;
 
             return true;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -233,7 +233,7 @@
                 <Button x:Name="GamesButton" Content="Игры" Style="{StaticResource MenuButton}" Click="GamesButton_Click"/>
                 <Button x:Name="LibraryButton" Content="Библиотека Игр" Style="{StaticResource MenuButton}" Click="LibraryButton_Click"/>
                 <Button x:Name="CartButton" Content="Корзина" Style="{StaticResource MenuButton}" Click="CartButton_Click"/>
-                        
+                <Button x:Name="CloseButton" Content="Закрыть приложение" Style="{StaticResource MenuButton}" Click="CloseButton_Click"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,20,0">
@@ -310,7 +310,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
+            <ScrollViewer x:Name="LibrarySection" Visibility="Collapsed" VerticalScrollBarVisibility="Hidden" Background="Transparent" Padding="20">
                 <StackPanel Orientation="Vertical" Background="Transparent">
                     <TextBlock x:Name="LibraryTitleText" Text="Библиотека" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
                     <TextBlock x:Name="LibraryEmptytext" Text="Библиотека пуста, но ты всё еще можешь купить игру!" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
@@ -325,7 +325,7 @@
             </ScrollViewer>
 
             <Grid>
-                <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Background="Transparent" Padding="20">
+                <ScrollViewer x:Name="CartSection" Visibility="Collapsed" VerticalScrollBarVisibility="Hidden" Background="Transparent" Padding="20">
                     <StackPanel Orientation="Vertical" Background="Transparent">
                         <TextBlock x:Name="CartTitleText" Text="Корзина" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
                         <TextBlock x:Name="CartEmptyText" Text="Корзина пуста, но ты всё еще можешь выбрать игру!" Foreground="Gray" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>

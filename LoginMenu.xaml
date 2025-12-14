@@ -5,6 +5,8 @@
         Height="400"
         Width="350"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
         Background="#1E1E1E">
 
     <Window.Resources>
@@ -46,8 +48,14 @@
                 <Button Content="Зарегистрироваться"
                         Style="{StaticResource LinkButton}"
                         Click="GoToRegister_Click"/>
+
             </StackPanel>
-            
+
+            <Button Content="Выйти из приложения"
+                        Style="{StaticResource LinkButton}"
+                        Foreground="Red"
+                        Click="Close_Click"
+                        HorizontalAlignment="Center"/>
         </StackPanel>
     </Border>
 </Window>

@@ -49,11 +49,15 @@ namespace GamesShop
 
                 Window mainWindow = new Window
                 {
-                    Title = "Главное окно",
+                    Title = "GamesShop",
                     Content = new MainWindowControl(username),
-                    Width = 800,
-                    Height = 600,
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                    Width = SystemParameters.PrimaryScreenWidth,
+                    Height = SystemParameters.PrimaryScreenHeight,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    WindowState = WindowState.Maximized,
+                    WindowStyle = WindowStyle.None,
+                    ResizeMode = ResizeMode.NoResize,
+                    Topmost = false
                 };
 
                 mainWindow.Show();
@@ -71,6 +75,11 @@ namespace GamesShop
             RegisterMenu registerMenu = new RegisterMenu();
             registerMenu.Show();
 
+            this.Close();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
     }
